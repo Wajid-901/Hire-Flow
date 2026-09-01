@@ -9,8 +9,8 @@
 A free, full-stack job application tracker built for students and professionals.  
 Organise your job search, visualise your progress, and never lose track of an opportunity again.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://hireflow.vercel.app)
-[![API Health](https://img.shields.io/badge/API-Healthy-10b981?style=for-the-badge&logo=render&logoColor=white)](https://hireflow-api.onrender.com/api/health)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-6366f1?style=for-the-badge&logo=vercel&logoColor=white)](https://hire-flow-six-theta.vercel.app/)
+[![API Health](https://img.shields.io/badge/API-Healthy-10b981?style=for-the-badge&logo=render&logoColor=white)](https://hireflow-api-e53e.onrender.com/api/health)
 
 ![React](https://img.shields.io/badge/React_18-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
@@ -287,10 +287,6 @@ npm run dev
 ```
 
 ---
-
-## Deployment
-
-See **[DEPLOY.md](./DEPLOY.md)** for the complete step-by-step guide.
 
 **Free hosting stack:**
 
