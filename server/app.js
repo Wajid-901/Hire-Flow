@@ -12,17 +12,19 @@ const app = express();
 
 app.use(helmet());
 
-// Support multiple CLIENT_URL values separated by comma
-// e.g. CLIENT_URL=https://hireflow.vercel.app,https://hire-flow-six-theta.vercel.app
+// Allow production URL + any Vercel preview deployments for this project
 const allowedOrigins = process.env.CLIENT_URL
   ? process.env.CLIENT_URL.split(",").map((u) => u.trim())
   : ["http://localhost:5173", "http://localhost:5174"];
 
+// Regex to allow all Vercel preview URLs for Wajid's project
+const vercelPreviewPattern = /^https:\/\/hireflow.*\.vercel\.app$/;
+
 app.use(cors({
   origin: (origin, cb) => {
-    // Allow requests with no origin (Postman, UptimeRobot, mobile apps)
     if (!origin) return cb(null, true);
     if (allowedOrigins.includes(origin)) return cb(null, true);
+    if (vercelPreviewPattern.test(origin)) return cb(null, true);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
