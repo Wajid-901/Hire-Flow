@@ -5,3 +5,13 @@ node_modules
 *.log
 dist
 .DS_Store
+
+brain.md
+CHANGES_NEEDED.md
+DEPLOY.md
+FIXES_COMPLETE.md
+MVP_PROGRESS.md
+PRODUCTION_ROADMAP.md
+progress.md
+QUICK_START.md
+SESSION_SUMMARY.md
