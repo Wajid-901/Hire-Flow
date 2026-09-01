@@ -12,13 +12,17 @@ const app = express();
 
 app.use(helmet());
 
+// Support multiple CLIENT_URL values separated by comma
+// e.g. CLIENT_URL=https://hireflow.vercel.app,https://hire-flow-six-theta.vercel.app
 const allowedOrigins = process.env.CLIENT_URL
-  ? [process.env.CLIENT_URL]
+  ? process.env.CLIENT_URL.split(",").map((u) => u.trim())
   : ["http://localhost:5173", "http://localhost:5174"];
 
 app.use(cors({
   origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    // Allow requests with no origin (Postman, UptimeRobot, mobile apps)
+    if (!origin) return cb(null, true);
+    if (allowedOrigins.includes(origin)) return cb(null, true);
     cb(new Error(`CORS: origin ${origin} not allowed`));
   },
   credentials: true,
