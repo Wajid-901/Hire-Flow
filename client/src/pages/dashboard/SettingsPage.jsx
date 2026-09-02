@@ -64,8 +64,6 @@ const SettingsPage = () => {
             <div className="space-y-3">
               <Link
                 to="/privacy-policy"
-                target="_blank"
-                rel="noreferrer"
                 className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
               >
                 <div>
@@ -76,8 +74,6 @@ const SettingsPage = () => {
               </Link>
               <Link
                 to="/terms"
-                target="_blank"
-                rel="noreferrer"
                 className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
               >
                 <div>
@@ -88,8 +84,6 @@ const SettingsPage = () => {
               </Link>
               <Link
                 to="/about"
-                target="_blank"
-                rel="noreferrer"
                 className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
               >
                 <div>

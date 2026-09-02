@@ -2,6 +2,8 @@
 import { Link } from "react-router-dom";
 import { BsEnvelopeFill, BsGithub, BsTwitterX, BsCheckCircleFill } from "react-icons/bs";
 import Logo from "../components/common/Logo";
+import PublicNavbar from "../components/common/PublicNavbar";
+import axiosInstance from "../api/axiosInstance";
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -192,6 +194,7 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
 
 
 
