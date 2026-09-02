@@ -1,4 +1,4 @@
-import express   from "express";
+﻿import express   from "express";
 import cors      from "cors";
 import helmet    from "helmet";
 import rateLimit from "express-rate-limit";
@@ -6,6 +6,7 @@ import rateLimit from "express-rate-limit";
 import applicationRoutes from "./routes/applicationRoutes.js";
 import authRoutes        from "./routes/authRoutes.js";
 import healthRoutes      from "./routes/healthRoutes.js";
+import contactRoutes     from "./routes/contactRoutes.js";
 import errorMiddleware   from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -49,8 +50,10 @@ const apiLimiter = rateLimit({
 });
 
 app.use("/api/health",       healthRoutes);
+app.use("/api/contact",       contactRoutes);
 app.use("/api/auth",         authLimiter, authRoutes);
 app.use("/api/applications", apiLimiter,  applicationRoutes);
 app.use(errorMiddleware);
 
 export default app;
+

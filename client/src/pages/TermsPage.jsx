@@ -1,17 +1,6 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
+import PublicNavbar from "../components/common/PublicNavbar";
 import Logo from "../components/common/Logo";
-
-const Navbar = () => (
-  <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090B]/80 border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <Link to="/"><Logo size={30} /></Link>
-      <div className="flex items-center gap-6">
-        <Link to="/login"    className="text-sm text-neutral-400 hover:text-white transition-colors">Log in</Link>
-        <Link to="/register" className="text-sm font-semibold px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all">Get Started</Link>
-      </div>
-    </div>
-  </nav>
-);
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -39,7 +28,7 @@ const LAST_UPDATED = "January 1, 2026";
 
 const TermsPage = () => (
   <div className="min-h-screen bg-[#09090B] text-white">
-    <Navbar />
+    <PublicNavbar />
 
     <div className="max-w-3xl mx-auto px-6 py-16">
       {/* Header */}
@@ -111,7 +100,7 @@ const TermsPage = () => (
         <ul className="list-disc pl-6 space-y-2">
           <li>Scheduled maintenance</li>
           <li>Infrastructure issues beyond our control</li>
-          <li>Server cold starts on our free hosting tier (typically 30–60 seconds)</li>
+          <li>Server cold starts on our free hosting tier (typically 30â€“60 seconds)</li>
         </ul>
         <p>We will endeavour to minimise disruptions and notify users of significant planned maintenance.</p>
       </Section>
@@ -127,7 +116,7 @@ const TermsPage = () => (
       </Section>
 
       <Section id="limitation-of-liability" title="8. Limitation of Liability">
-        <p>To the maximum extent permitted by applicable law, HireFlow and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages — including loss of profits, data, or goodwill — arising from your use of or inability to use the Service.</p>
+        <p>To the maximum extent permitted by applicable law, HireFlow and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages â€” including loss of profits, data, or goodwill â€” arising from your use of or inability to use the Service.</p>
       </Section>
 
       <Section id="termination" title="9. Termination">
@@ -158,3 +147,5 @@ const TermsPage = () => (
 );
 
 export default TermsPage;
+
+

@@ -1,19 +1,7 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link } from "react-router-dom";
 import { BsEnvelopeFill, BsGithub, BsTwitterX, BsCheckCircleFill } from "react-icons/bs";
 import Logo from "../components/common/Logo";
-
-const Navbar = () => (
-  <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090B]/80 border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <Link to="/"><Logo size={30} /></Link>
-      <div className="flex items-center gap-6">
-        <Link to="/login"    className="text-sm text-neutral-400 hover:text-white transition-colors">Log in</Link>
-        <Link to="/register" className="text-sm font-semibold px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all">Get Started</Link>
-      </div>
-    </div>
-  </nav>
-);
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -41,13 +29,13 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate sending — replace with a real email service (EmailJS, Formspree, etc.)
+    // Simulate sending â€” replace with a real email service (EmailJS, Formspree, etc.)
     setTimeout(() => { setLoading(false); setSent(true); }, 1200);
   };
 
   return (
     <div className="min-h-screen bg-[#09090B] text-white">
-      <Navbar />
+      <PublicNavbar />
 
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
@@ -65,7 +53,7 @@ const ContactPage = () => {
       {/* Content */}
       <section className="max-w-5xl mx-auto px-6 pb-24 grid md:grid-cols-5 gap-10">
 
-        {/* Left — contact info */}
+        {/* Left â€” contact info */}
         <div className="md:col-span-2 space-y-6">
           <div className="bg-[#18181B] border border-white/5 rounded-2xl p-6 space-y-5">
             <h3 className="font-bold text-white text-lg">Contact info</h3>
@@ -98,7 +86,7 @@ const ContactPage = () => {
           <div className="bg-[#18181B] border border-white/5 rounded-2xl p-6">
             <h3 className="font-bold text-white mb-3">Response time</h3>
             <p className="text-sm text-neutral-400 leading-relaxed">
-              We typically respond within <span className="text-white font-medium">24–48 hours</span> on weekdays. For urgent issues, include "URGENT" in your subject line.
+              We typically respond within <span className="text-white font-medium">24â€“48 hours</span> on weekdays. For urgent issues, include "URGENT" in your subject line.
             </p>
           </div>
 
@@ -113,12 +101,12 @@ const ContactPage = () => {
               rel="noreferrer"
               className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
             >
-              Open a GitHub issue →
+              Open a GitHub issue â†’
             </a>
           </div>
         </div>
 
-        {/* Right — form */}
+        {/* Right â€” form */}
         <div className="md:col-span-3">
           {sent ? (
             <div className="bg-[#18181B] border border-white/5 rounded-2xl p-12 text-center h-full flex flex-col items-center justify-center gap-4">
@@ -126,7 +114,7 @@ const ContactPage = () => {
                 <BsCheckCircleFill className="text-emerald-500 text-3xl" />
               </div>
               <h3 className="text-2xl font-bold text-white">Message sent!</h3>
-              <p className="text-neutral-400">Thanks for reaching out. We'll get back to you within 24–48 hours.</p>
+              <p className="text-neutral-400">Thanks for reaching out. We'll get back to you within 24â€“48 hours.</p>
               <button
                 onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
                 className="mt-2 px-6 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm font-medium hover:bg-zinc-700 transition-all"
@@ -169,10 +157,16 @@ const ContactPage = () => {
 
                 <div>
                   <label className={labelClass}>Message</label>
-                  <textarea required rows={6} placeholder="Tell us more…" value={form.message}
+                  <textarea required rows={6} placeholder="Tell us moreâ€¦" value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                     className={`${inputClass} resize-none`} />
                 </div>
+
+                {submitError && (
+                  <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                    {submitError}
+                  </div>
+                )}
 
                 <button
                   type="submit"
@@ -182,7 +176,7 @@ const ContactPage = () => {
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Sending…
+                      Sendingâ€¦
                     </span>
                   ) : "Send Message"}
                 </button>
@@ -198,3 +192,7 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
+
+
+

@@ -1,17 +1,6 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
+import PublicNavbar from "../components/common/PublicNavbar";
 import Logo from "../components/common/Logo";
-
-const Navbar = () => (
-  <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090B]/80 border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <Link to="/"><Logo size={30} /></Link>
-      <div className="flex items-center gap-6">
-        <Link to="/login"    className="text-sm text-neutral-400 hover:text-white transition-colors">Log in</Link>
-        <Link to="/register" className="text-sm font-semibold px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all">Get Started</Link>
-      </div>
-    </div>
-  </nav>
-);
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -39,7 +28,7 @@ const LAST_UPDATED = "January 1, 2026";
 
 const PrivacyPolicyPage = () => (
   <div className="min-h-screen bg-[#09090B] text-white">
-    <Navbar />
+    <PublicNavbar />
 
     <div className="max-w-3xl mx-auto px-6 py-16">
       {/* Header */}
@@ -53,7 +42,7 @@ const PrivacyPolicyPage = () => (
 
       {/* Summary callout */}
       <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 mb-10">
-        <p className="text-emerald-400 font-semibold mb-2">TL;DR — The short version</p>
+        <p className="text-emerald-400 font-semibold mb-2">TL;DR â€” The short version</p>
         <p className="text-neutral-300 text-sm leading-relaxed">
           We collect only what we need to run the service. We never sell your data to anyone.
           We don't use third-party advertising. You can delete your account and all data at any time.
@@ -62,7 +51,7 @@ const PrivacyPolicyPage = () => (
 
       <Section id="information-we-collect" title="1. Information We Collect">
         <p><strong className="text-white">Account information:</strong> When you register, we collect your name, email address, and a bcrypt-hashed version of your password. We never store your password in plain text.</p>
-        <p><strong className="text-white">Application data:</strong> Job application details you enter — company name, role, status, notes, salary ranges, and related information. This data belongs entirely to you.</p>
+        <p><strong className="text-white">Application data:</strong> Job application details you enter â€” company name, role, status, notes, salary ranges, and related information. This data belongs entirely to you.</p>
         <p><strong className="text-white">Usage information:</strong> We may collect basic information about how you use the service (pages visited, features used) to improve the product. We do not track you across other websites.</p>
       </Section>
 
@@ -80,7 +69,7 @@ const PrivacyPolicyPage = () => (
 
       <Section id="data-storage" title="3. Data Storage and Security">
         <p>Your data is stored in MongoDB Atlas, a cloud database hosted on AWS infrastructure. All data is encrypted at rest and in transit using industry-standard TLS/SSL.</p>
-        <p>Passwords are hashed using bcrypt with 10 salt rounds before storage. Password reset tokens are SHA-256 hashed before being stored in the database — even we cannot read them.</p>
+        <p>Passwords are hashed using bcrypt with 10 salt rounds before storage. Password reset tokens are SHA-256 hashed before being stored in the database â€” even we cannot read them.</p>
         <p>We implement rate limiting, security headers via Helmet.js, and CORS restrictions to protect the API from common attacks.</p>
       </Section>
 
@@ -103,7 +92,7 @@ const PrivacyPolicyPage = () => (
       </Section>
 
       <Section id="cookies" title="6. Cookies and Local Storage">
-        <p>HireFlow uses <strong className="text-white">localStorage</strong> in your browser to store your authentication token (JWT). This is required for the application to function — without it, you would be logged out on every page refresh.</p>
+        <p>HireFlow uses <strong className="text-white">localStorage</strong> in your browser to store your authentication token (JWT). This is required for the application to function â€” without it, you would be logged out on every page refresh.</p>
         <p>We do not use third-party cookies or tracking cookies of any kind.</p>
       </Section>
 
@@ -130,3 +119,5 @@ const PrivacyPolicyPage = () => (
 );
 
 export default PrivacyPolicyPage;
+
+

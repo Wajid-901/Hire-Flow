@@ -1,21 +1,10 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
+import PublicNavbar from "../components/common/PublicNavbar";
 import Logo from "../components/common/Logo";
 import {
   BsLightningFill, BsShieldFill, BsHeartFill,
   BsPeopleFill, BsArrowRight, BsGithub, BsLinkedin,
 } from "react-icons/bs";
-
-const Navbar = () => (
-  <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090B]/80 border-b border-white/5">
-    <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-      <Link to="/"><Logo size={30} /></Link>
-      <div className="flex items-center gap-6">
-        <Link to="/login"  className="text-sm text-neutral-400 hover:text-white transition-colors">Log in</Link>
-        <Link to="/register" className="text-sm font-semibold px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white transition-all">Get Started</Link>
-      </div>
-    </div>
-  </nav>
-);
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -33,15 +22,15 @@ const Footer = () => (
 );
 
 const values = [
-  { icon: <BsLightningFill className="text-indigo-400 text-xl" />, title: "Built for speed", body: "We obsess over performance. Every interaction should feel instant — no loading spinners, no waiting around." },
+  { icon: <BsLightningFill className="text-indigo-400 text-xl" />, title: "Built for speed", body: "We obsess over performance. Every interaction should feel instant â€” no loading spinners, no waiting around." },
   { icon: <BsShieldFill    className="text-emerald-400 text-xl" />, title: "Privacy first",   body: "Your job search data is yours. We never sell it, share it, or use it for advertising. Ever." },
-  { icon: <BsHeartFill     className="text-rose-400    text-xl" />, title: "Free forever",    body: "We believe everyone deserves powerful career tools. HireFlow is completely free — no hidden tiers." },
+  { icon: <BsHeartFill     className="text-rose-400    text-xl" />, title: "Free forever",    body: "We believe everyone deserves powerful career tools. HireFlow is completely free â€” no hidden tiers." },
   { icon: <BsPeopleFill    className="text-amber-400   text-xl" />, title: "Made for students", body: "Built by a student who felt the pain of messy spreadsheets during job hunts. We get it." },
 ];
 
 const AboutPage = () => (
   <div className="min-h-screen bg-[#09090B] text-white">
-    <Navbar />
+    <PublicNavbar />
 
     {/* Hero */}
     <section className="max-w-4xl mx-auto px-6 py-24 text-center">
@@ -55,7 +44,7 @@ const AboutPage = () => (
         </span>
       </h1>
       <p className="text-lg text-neutral-400 max-w-2xl mx-auto leading-relaxed">
-        HireFlow started from a simple frustration — tracking 50+ job applications in a Google Sheet
+        HireFlow started from a simple frustration â€” tracking 50+ job applications in a Google Sheet
         was chaotic. There had to be a better way.
       </p>
     </section>
@@ -65,7 +54,7 @@ const AboutPage = () => (
       <div className="bg-[#18181B] border border-white/5 rounded-2xl p-8 md:p-12 space-y-5">
         <p className="text-neutral-300 leading-relaxed">
           During the job search grind, it became clear that most people were managing their entire
-          career opportunity pipeline inside a spreadsheet — forgetting follow-up dates, losing track
+          career opportunity pipeline inside a spreadsheet â€” forgetting follow-up dates, losing track
           of which version of a resume they sent, and having no idea what their actual success rate was.
         </p>
         <p className="text-neutral-300 leading-relaxed">
@@ -102,7 +91,7 @@ const AboutPage = () => (
     {/* Tech stack */}
     <section className="max-w-3xl mx-auto px-6 pb-24 text-center">
       <h2 className="text-3xl font-bold mb-4">What it's built with</h2>
-      <p className="text-neutral-400 mb-10">A modern, production-grade stack — the same tools used at top tech companies.</p>
+      <p className="text-neutral-400 mb-10">A modern, production-grade stack â€” the same tools used at top tech companies.</p>
       <div className="flex flex-wrap justify-center gap-3">
         {["React 18","Node.js","Express","MongoDB Atlas","JWT Auth","Tailwind CSS","Recharts","Nodemailer","Vercel","Render"].map((t) => (
           <span key={t} className="bg-white/5 border border-white/10 text-neutral-300 text-sm px-4 py-2 rounded-full">
@@ -131,3 +120,5 @@ const AboutPage = () => (
 );
 
 export default AboutPage;
+
+
