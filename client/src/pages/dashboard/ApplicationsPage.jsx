@@ -168,34 +168,34 @@ const ApplicationsPage = () => {
   return (
     <PageContainer>
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-6">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-1">Applications</h1>
-          <p className="text-neutral-400">
+          <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1">Applications</h1>
+          <p className="text-sm sm:text-base text-neutral-400">
             {filtered.length === applications.length
               ? `${applications.length} total`
               : `${filtered.length} of ${applications.length}`}
           </p>
         </div>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2 sm:gap-3">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border font-medium transition-all ${
+            className={`flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-xl border font-medium transition-all text-sm ${
               showFilters
                 ? "border-indigo-500 bg-indigo-500/10 text-indigo-400"
                 : "border-white/10 bg-white/5 text-white hover:bg-white/10"
             }`}
           >
             <BsFilter />
-            Filters
+            <span className="hidden xs:inline">Filters</span>
           </button>
 
           <button
             onClick={handleAddApplication}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-0.5"
+            className="flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-0.5 text-sm flex-1 sm:flex-none justify-center"
           >
-            <BsPlus className="text-xl" />
+            <BsPlus className="text-xl shrink-0" />
             Add Application
           </button>
         </div>

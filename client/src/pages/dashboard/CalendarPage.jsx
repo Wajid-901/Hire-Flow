@@ -93,14 +93,14 @@ const CalendarPage = () => {
 
   return (
     <PageContainer>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-1">Calendar</h1>
-        <p className="text-lg text-neutral-400">Your application timeline at a glance</p>
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1">Calendar</h1>
+        <p className="text-sm sm:text-lg text-neutral-400">Your application timeline at a glance</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
         {/* ── Calendar ── */}
-        <div className="lg:col-span-2 rounded-2xl border border-white/5 bg-[#18181B] p-6 shadow-xl">
+        <div className="lg:col-span-2 rounded-2xl border border-white/5 bg-[#18181B] p-4 sm:p-6 shadow-xl">
           {/* Month nav */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-white">
@@ -131,7 +131,9 @@ const CalendarPage = () => {
           {/* Day headers */}
           <div className="grid grid-cols-7 mb-2">
             {DAYS.map((d) => (
-              <div key={d} className="text-center text-xs font-semibold text-zinc-500 py-1">{d}</div>
+              <div key={d} className="text-center text-[10px] sm:text-xs font-semibold text-zinc-500 py-1">
+                {d}
+              </div>
             ))}
           </div>
 
@@ -151,13 +153,13 @@ const CalendarPage = () => {
                     );
                   }}
                   disabled={!cell.current}
-                  className={`relative flex flex-col items-center rounded-xl p-1.5 min-h-[52px] transition-all
+                  className={`relative flex flex-col items-center rounded-xl p-1 sm:p-1.5 min-h-[40px] sm:min-h-[52px] transition-all
                     ${!cell.current ? "opacity-20 cursor-default" : "hover:bg-white/5 cursor-pointer"}
                     ${cell.isToday ? "ring-2 ring-indigo-500 bg-indigo-500/10" : ""}
                     ${isSelected ? "bg-indigo-500/20 ring-2 ring-indigo-400" : ""}
                   `}
                 >
-                  <span className={`text-sm font-medium mb-1 ${
+                  <span className={`text-xs sm:text-sm font-medium mb-0.5 sm:mb-1 ${
                     cell.isToday ? "text-indigo-400" : cell.current ? "text-white" : "text-zinc-600"
                   }`}>
                     {cell.day}

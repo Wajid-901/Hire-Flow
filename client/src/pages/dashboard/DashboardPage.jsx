@@ -122,13 +122,13 @@ const DashboardPage = () => {
   return (
     <PageContainer>
       {/* Welcome */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+      <div className="mb-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:flex-wrap">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white mb-1">
               {getGreeting()}, {user?.name?.split(" ")[0] || "there"}! 👋
             </h1>
-            <p className="text-lg text-neutral-400">
+            <p className="text-sm sm:text-base lg:text-lg text-neutral-400">
               {applications.length > 0
                 ? "Here's what's happening with your job search today."
                 : "Start tracking your job applications to see insights here."}
@@ -137,7 +137,7 @@ const DashboardPage = () => {
 
           <button
             onClick={() => navigate("/dashboard/applications")}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
+            className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5 text-sm sm:text-base w-full sm:w-auto"
           >
             <BsPlus className="text-xl" />
             Add Application
@@ -152,7 +152,7 @@ const DashboardPage = () => {
       )}
 
       {/* Stats */}
-      <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-4 mb-8">
+      <section className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
         {statsCards.map((s) => (
           <StatsCard key={s.title} title={s.title} value={s.value} subtitle={s.subtitle} tone={s.tone} />
         ))}
@@ -234,16 +234,16 @@ const DashboardPage = () => {
         </>
       ) : (
         /* Empty state */
-        <div className="rounded-2xl border border-white/5 bg-[#18181B] p-16 text-center shadow-xl">
+        <div className="rounded-2xl border border-white/5 bg-[#18181B] p-8 sm:p-16 text-center shadow-xl">
           <div className="max-w-md mx-auto">
-            <div className="text-6xl mb-6">🚀</div>
-            <h3 className="text-2xl font-bold text-white mb-3">Start Your Job Search Journey</h3>
-            <p className="text-neutral-400 mb-8">
+            <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">🚀</div>
+            <h3 className="text-xl sm:text-2xl font-bold text-white mb-2 sm:mb-3">Start Your Job Search Journey</h3>
+            <p className="text-sm sm:text-base text-neutral-400 mb-6 sm:mb-8">
               Add your first job application to start tracking your progress and get insights.
             </p>
             <button
               onClick={() => navigate("/dashboard/applications")}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5 text-sm sm:text-base"
             >
               <BsPlus className="text-xl" />
               Add Your First Application

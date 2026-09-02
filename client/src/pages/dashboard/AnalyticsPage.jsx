@@ -6,7 +6,7 @@ import {
   ResponsiveContainer,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend,
 } from "recharts";
-import { BsBriefcaseFill, BsChatDotsFill, BsTrophyFill, BsXCircleFill, BsArrowUp, BsArrowDown } from "react-icons/bs";
+import { BsBriefcaseFill, BsChatDotsFill, BsTrophyFill, BsXCircleFill } from "react-icons/bs";
 import PageContainer from "../../components/layout/PageContainer";
 import Loader from "../../components/common/Loader";
 import { getApplications } from "../../api/applicationsApi";
@@ -35,24 +35,16 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 // ─── stat card ───────────────────────────────────────────────────────────────
-const StatCard = ({ label, value, sub, Icon, color, trend }) => (
-  <div className={`rounded-2xl border bg-[#18181B] p-5 shadow-xl ${color.border}`}>
-    <div className="flex items-start justify-between gap-3 mb-3">
-      <p className="text-sm text-zinc-400">{label}</p>
-      <div className={`flex items-center justify-center w-9 h-9 rounded-xl ${color.icon}`}>
-        <Icon className="text-base" />
+const StatCard = ({ label, value, sub, Icon, color }) => (
+  <div className={`rounded-2xl border bg-[#18181B] p-4 sm:p-5 shadow-xl ${color.border}`}>
+    <div className="flex items-start justify-between gap-2 mb-2 sm:mb-3">
+      <p className="text-xs sm:text-sm text-zinc-400 leading-tight">{label}</p>
+      <div className={`flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl shrink-0 ${color.icon}`}>
+        <Icon className="text-sm sm:text-base" />
       </div>
     </div>
-    <p className="text-4xl font-bold text-white tabular-nums mb-1">{value}</p>
-    <div className="flex items-center gap-2">
-      <p className="text-xs text-zinc-500">{sub}</p>
-      {trend !== undefined && trend !== null && (
-        <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${trend >= 0 ? "text-emerald-400" : "text-rose-400"}`}>
-          {trend >= 0 ? <BsArrowUp /> : <BsArrowDown />}
-          {Math.abs(trend)}%
-        </span>
-      )}
-    </div>
+    <p className="text-2xl sm:text-4xl font-bold text-white tabular-nums mb-1">{value}</p>
+    <p className="text-xs text-zinc-500">{sub}</p>
   </div>
 );
 
@@ -154,10 +146,9 @@ const AnalyticsPage = () => {
 
   return (
     <PageContainer>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-1">Analytics</h1>
-        <p className="text-lg text-neutral-400">
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1">Analytics</h1>
+        <p className="text-sm sm:text-lg text-neutral-400">
           Insights from your {applications.length} tracked application{applications.length !== 1 ? "s" : ""}
         </p>
       </div>
@@ -166,8 +157,8 @@ const AnalyticsPage = () => {
         <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">{error}</div>
       )}
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+      {/* Stats row — 2 cols on mobile, 4 on xl */}
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         <StatCard
           label="Total Applications"
           value={stats.total}
@@ -210,8 +201,8 @@ const AnalyticsPage = () => {
           <div className="grid gap-6 lg:grid-cols-3 mb-6">
             <div className="lg:col-span-2">
               <ChartCard title="Applications Over Time" subtitle="Monthly breakdown by status (last 6 months)">
-                <ResponsiveContainer width="100%" height={260}>
-                  <AreaChart data={monthlyData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+                <ResponsiveContainer width="100%" height={220}>
+                  <AreaChart data={monthlyData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
                     <defs>
                       {Object.entries(COLORS).map(([key, col]) => (
                         <linearGradient key={key} id={`grad-${key}`} x1="0" y1="0" x2="0" y2="1">
@@ -278,9 +269,9 @@ const AnalyticsPage = () => {
 
           {/* Row 2: Bar chart (weekday) + Top companies */}
           <div className="grid gap-6 lg:grid-cols-2">
-            <ChartCard title="Applications by Day of Week" subtitle="When you apply most often">
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={weekdayData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+              <ChartCard title="Applications by Day of Week" subtitle="When you apply most often">
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={weekdayData} margin={{ top: 4, right: 4, left: -28, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#27272a" vertical={false} />
                   <XAxis dataKey="label" tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />

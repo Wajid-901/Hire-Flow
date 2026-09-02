@@ -46,7 +46,7 @@ const StatsCard = ({ title, value, subtitle, tone = "blue" }) => {
 
   return (
     <div
-      className={`group relative rounded-2xl border bg-[#18181B] p-6 overflow-hidden
+      className={`group relative rounded-2xl border bg-[#18181B] p-4 sm:p-6 overflow-hidden
         ${cfg.border} ${cfg.glow} shadow-xl transition-all duration-300 hover:-translate-y-1`}
     >
       {/* Background orb */}
@@ -55,17 +55,17 @@ const StatsCard = ({ title, value, subtitle, tone = "blue" }) => {
           group-hover:opacity-60 transition-opacity ${cfg.bg}`}
       />
 
-      <div className="relative flex items-start justify-between gap-3">
+      <div className="relative flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-zinc-400 mb-3">{title}</p>
-          <h3 className="text-4xl font-bold tracking-tight text-white mb-1 tabular-nums">
+          <p className="text-xs sm:text-sm font-medium text-zinc-400 mb-2 sm:mb-3 leading-tight">{title}</p>
+          <h3 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1 tabular-nums">
             {value}
           </h3>
-          <p className="text-sm text-zinc-500 truncate">{subtitle}</p>
+          <p className="text-xs sm:text-sm text-zinc-500 truncate">{subtitle}</p>
         </div>
 
-        <div className={`flex items-center justify-center w-11 h-11 rounded-xl shrink-0 ${cfg.icon}`}>
-          <Icon className="text-lg" />
+        <div className={`flex items-center justify-center w-8 h-8 sm:w-11 sm:h-11 rounded-xl shrink-0 ${cfg.icon}`}>
+          <Icon className="text-sm sm:text-lg" />
         </div>
       </div>
     </div>

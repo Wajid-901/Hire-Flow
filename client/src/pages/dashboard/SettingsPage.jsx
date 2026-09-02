@@ -6,11 +6,11 @@ import ChangePasswordForm from "../../components/settings/ChangePasswordForm";
 const SettingsPage = () => {
   return (
     <PageContainer>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-2">
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1">
           Settings
         </h1>
-        <p className="text-lg text-neutral-400">
+        <p className="text-sm sm:text-lg text-neutral-400">
           Manage your account settings and preferences
         </p>
       </div>

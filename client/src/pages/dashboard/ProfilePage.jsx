@@ -20,9 +20,9 @@ const Field = ({ label, icon: Icon, children }) => (
 );
 
 const StatPill = ({ label, value, color }) => (
-  <div className={`flex-1 min-w-[100px] rounded-2xl border p-4 text-center ${color}`}>
-    <p className="text-2xl font-bold text-white mb-0.5">{value}</p>
-    <p className="text-xs text-zinc-400">{label}</p>
+  <div className={`flex-1 min-w-[80px] rounded-2xl border p-3 sm:p-4 text-center ${color}`}>
+    <p className="text-xl sm:text-2xl font-bold text-white mb-0.5">{value}</p>
+    <p className="text-[10px] sm:text-xs text-zinc-400 leading-tight">{label}</p>
   </div>
 );
 
@@ -96,9 +96,9 @@ const ProfilePage = () => {
   return (
     <PageContainer>
       {/* Page title */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white mb-1">Profile</h1>
-        <p className="text-lg text-neutral-400">Your account information</p>
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-1">Profile</h1>
+        <p className="text-sm sm:text-lg text-neutral-400">Your account information</p>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
