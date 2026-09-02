@@ -430,10 +430,10 @@ const HomePage = () => {
             <div>
               <h4 className="font-semibold text-white mb-4">Company</h4>
               <ul className="space-y-2 text-neutral-400">
-                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><Link to="/about"          className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link to="/contact"        className="hover:text-white transition-colors">Contact</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms"          className="hover:text-white transition-colors">Terms of Service</Link></li>
               </ul>
             </div>
           </div>

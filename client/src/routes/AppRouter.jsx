@@ -5,6 +5,10 @@ import LoginPage from "../pages/auth/LoginPage";
 import RegisterPage from "../pages/auth/RegisterPage";
 import ForgotPasswordPage from "../pages/auth/ForgotPasswordPage";
 import ResetPasswordPage from "../pages/auth/ResetPasswordPage";
+import AboutPage from "../pages/AboutPage";
+import ContactPage from "../pages/ContactPage";
+import PrivacyPolicyPage from "../pages/PrivacyPolicyPage";
+import TermsPage from "../pages/TermsPage";
 
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import ApplicationsPage from "../pages/dashboard/ApplicationsPage";
@@ -26,6 +30,10 @@ function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/about"          element={<AboutPage />} />
+        <Route path="/contact"        element={<ContactPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/terms"          element={<TermsPage />} />
 
         <Route element={<PublicRoute />}>
           <Route path="/login" element={<LoginPage />} />
