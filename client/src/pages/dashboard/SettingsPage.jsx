@@ -1,4 +1,5 @@
-import { BsGearFill, BsBellFill, BsShieldFill, BsGlobe } from "react-icons/bs";
+import { BsGearFill, BsBellFill, BsShieldFill, BsGlobe, BsArrowRight } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import PageContainer from "../../components/layout/PageContainer";
 import ChangePasswordForm from "../../components/settings/ChangePasswordForm";
 
@@ -50,16 +51,54 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        {/* Privacy - Coming Soon */}
+        {/* Privacy */}
         <div>
           <div className="flex items-center gap-2 mb-4">
             <BsGlobe className="text-indigo-500" />
-            <h2 className="text-xl font-bold text-white">Privacy</h2>
+            <h2 className="text-xl font-bold text-white">Privacy & Legal</h2>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <p className="text-zinc-400 text-center py-8">
-              Privacy settings and data export coming soon
+            <p className="text-zinc-400 text-sm mb-5">
+              Review our policies to understand how we handle your data.
             </p>
+            <div className="space-y-3">
+              <Link
+                to="/privacy-policy"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-white">Privacy Policy</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">How we collect, store and use your data</p>
+                </div>
+                <BsArrowRight className="text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                to="/terms"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-white">Terms of Service</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Rules and guidelines for using HireFlow</p>
+                </div>
+                <BsArrowRight className="text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                to="/about"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center justify-between px-4 py-3 rounded-xl bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 transition-all group"
+              >
+                <div>
+                  <p className="text-sm font-semibold text-white">About HireFlow</p>
+                  <p className="text-xs text-zinc-500 mt-0.5">Our story, values and tech stack</p>
+                </div>
+                <BsArrowRight className="text-zinc-500 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
+              </Link>
+            </div>
           </div>
         </div>
       </div>

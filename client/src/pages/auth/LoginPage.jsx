@@ -216,13 +216,13 @@ const LoginPage = () => {
           {/* Footer Text */}
           <p className="mt-8 text-center text-sm text-neutral-500">
             By signing in, you agree to our{" "}
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+            <Link to="/terms" className="text-neutral-400 hover:text-white transition-colors">
               Terms of Service
-            </a>{" "}
+            </Link>{" "}
             and{" "}
-            <a href="#" className="text-neutral-400 hover:text-white transition-colors">
+            <Link to="/privacy-policy" className="text-neutral-400 hover:text-white transition-colors">
               Privacy Policy
-            </a>
+            </Link>
           </p>
         </div>
       </div>

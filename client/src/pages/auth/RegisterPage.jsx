@@ -250,13 +250,13 @@ const RegisterPage = () => {
                 />
                 <span className="text-sm text-neutral-400 group-hover:text-neutral-300 transition-colors">
                   I agree to the{" "}
-                  <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                  <Link to="/terms" className="text-indigo-400 hover:text-indigo-300">
                     Terms of Service
-                  </a>{" "}
+                  </Link>{" "}
                   and{" "}
-                  <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                  <Link to="/privacy-policy" className="text-indigo-400 hover:text-indigo-300">
                     Privacy Policy
-                  </a>
+                  </Link>
                 </span>
               </label>
 
