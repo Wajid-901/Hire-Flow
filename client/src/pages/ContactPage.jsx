@@ -1,6 +1,6 @@
 ﻿import { useState } from "react";
 import { Link } from "react-router-dom";
-import { BsEnvelopeFill, BsGithub, BsTwitterX, BsCheckCircleFill } from "react-icons/bs";
+import { BsEnvelopeFill, BsGithub, BsCheckCircleFill } from "react-icons/bs";
 import Logo from "../components/common/Logo";
 import PublicNavbar from "../components/common/PublicNavbar";
 import axiosInstance from "../api/axiosInstance";
@@ -24,15 +24,25 @@ const inputClass = "w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-7
 const labelClass = "block text-sm font-medium text-zinc-300 mb-1.5";
 
 const ContactPage = () => {
-  const [form, setForm]       = useState({ name: "", email: "", subject: "", message: "" });
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent]       = useState(false);
+  const [form, setForm]             = useState({ name: "", email: "", subject: "", message: "" });
+  const [loading, setLoading]       = useState(false);
+  const [sent, setSent]             = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate sending â€” replace with a real email service (EmailJS, Formspree, etc.)
-    setTimeout(() => { setLoading(false); setSent(true); }, 1200);
+    setSubmitError("");
+    try {
+      const res = await axiosInstance.post("/contact", form);
+      if (res.data.success) {
+        setSent(true);
+      }
+    } catch (err) {
+      setSubmitError(err.response?.data?.message || "Failed to send message. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -55,7 +65,7 @@ const ContactPage = () => {
       {/* Content */}
       <section className="max-w-5xl mx-auto px-6 pb-24 grid md:grid-cols-5 gap-10">
 
-        {/* Left â€” contact info */}
+        {/* Left — contact info */}
         <div className="md:col-span-2 space-y-6">
           <div className="bg-[#18181B] border border-white/5 rounded-2xl p-6 space-y-5">
             <h3 className="font-bold text-white text-lg">Contact info</h3>
@@ -88,7 +98,8 @@ const ContactPage = () => {
           <div className="bg-[#18181B] border border-white/5 rounded-2xl p-6">
             <h3 className="font-bold text-white mb-3">Response time</h3>
             <p className="text-sm text-neutral-400 leading-relaxed">
-              We typically respond within <span className="text-white font-medium">24â€“48 hours</span> on weekdays. For urgent issues, include "URGENT" in your subject line.
+              We typically respond within <span className="text-white font-medium">24–48 hours</span> on weekdays.
+              For urgent issues, include "URGENT" in your subject line.
             </p>
           </div>
 
@@ -103,12 +114,12 @@ const ContactPage = () => {
               rel="noreferrer"
               className="inline-flex items-center gap-2 text-sm font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
             >
-              Open a GitHub issue â†’
+              Open a GitHub issue &rarr;
             </a>
           </div>
         </div>
 
-        {/* Right â€” form */}
+        {/* Right — form */}
         <div className="md:col-span-3">
           {sent ? (
             <div className="bg-[#18181B] border border-white/5 rounded-2xl p-12 text-center h-full flex flex-col items-center justify-center gap-4">
@@ -116,9 +127,9 @@ const ContactPage = () => {
                 <BsCheckCircleFill className="text-emerald-500 text-3xl" />
               </div>
               <h3 className="text-2xl font-bold text-white">Message sent!</h3>
-              <p className="text-neutral-400">Thanks for reaching out. We'll get back to you within 24â€“48 hours.</p>
+              <p className="text-neutral-400">Thanks for reaching out. We will get back to you within 24-48 hours.</p>
               <button
-                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); }}
+                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); setSubmitError(""); }}
                 className="mt-2 px-6 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm font-medium hover:bg-zinc-700 transition-all"
               >
                 Send another message
@@ -131,23 +142,36 @@ const ContactPage = () => {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>Your Name</label>
-                    <input type="text" required placeholder="John Doe" value={form.name}
+                    <input
+                      type="text"
+                      required
+                      placeholder="John Doe"
+                      value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className={inputClass} />
+                      className={inputClass}
+                    />
                   </div>
                   <div>
                     <label className={labelClass}>Email Address</label>
-                    <input type="email" required placeholder="you@example.com" value={form.email}
+                    <input
+                      type="email"
+                      required
+                      placeholder="you@example.com"
+                      value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className={inputClass} />
+                      className={inputClass}
+                    />
                   </div>
                 </div>
 
                 <div>
                   <label className={labelClass}>Subject</label>
-                  <select value={form.subject} required
+                  <select
+                    value={form.subject}
+                    required
                     onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                    className={inputClass}>
+                    className={inputClass}
+                  >
                     <option value="">Select a topic</option>
                     <option>General inquiry</option>
                     <option>Bug report</option>
@@ -159,9 +183,14 @@ const ContactPage = () => {
 
                 <div>
                   <label className={labelClass}>Message</label>
-                  <textarea required rows={6} placeholder="Tell us moreâ€¦" value={form.message}
+                  <textarea
+                    required
+                    rows={6}
+                    placeholder="Tell us more..."
+                    value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className={`${inputClass} resize-none`} />
+                    className={`${inputClass} resize-none`}
+                  />
                 </div>
 
                 {submitError && (
@@ -178,9 +207,11 @@ const ContactPage = () => {
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
                       <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      Sendingâ€¦
+                      Sending...
                     </span>
-                  ) : "Send Message"}
+                  ) : (
+                    "Send Message"
+                  )}
                 </button>
               </form>
             </div>
@@ -194,8 +225,3 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
-
-
-
-
-

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ErrorBoundary from "../components/common/ErrorBoundary";
 
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/auth/LoginPage";
@@ -28,6 +29,7 @@ import PublicRoute from "./PublicRoute";
 function AppRouter() {
   return (
     <BrowserRouter>
+      <ErrorBoundary>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about"          element={<AboutPage />} />
@@ -56,6 +58,7 @@ function AppRouter() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

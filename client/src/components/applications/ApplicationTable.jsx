@@ -1,4 +1,4 @@
-﻿import { BsEye, BsPencil, BsTrash, BsGeoAlt, BsCalendarEvent, BsFlagFill } from "react-icons/bs";
+import { BsEye, BsPencil, BsTrash, BsGeoAlt, BsCalendarEvent, BsFlagFill } from "react-icons/bs";
 import StatusBadge from "./StatusBadge";
 
 const priorityColor = {
@@ -33,7 +33,7 @@ const ApplicationTable = ({
     return (
       <div className="rounded-2xl border border-white/5 bg-[#18181B] shadow-xl overflow-hidden">
         <div className="px-6 py-20 text-center">
-          <div className="text-5xl mb-3">ðŸ“­</div>
+          <div className="text-5xl mb-3">&#128301;</div>
           <p className="font-medium text-white">No applications found</p>
           <p className="text-sm text-neutral-500 mt-1">Try adjusting your search or filters</p>
         </div>
@@ -43,7 +43,7 @@ const ApplicationTable = ({
 
   return (
     <>
-      {/* â”€â”€ MOBILE: card list (hidden on sm+) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* MOBILE: card list (hidden on sm+) */}
       <div className="sm:hidden space-y-3">
         {/* Select-all bar */}
         {onSelectionChange && applications.length > 0 && (
@@ -94,7 +94,7 @@ const ApplicationTable = ({
               </div>
             </div>
 
-            {/* Meta row: location Â· date Â· priority */}
+            {/* Meta row: location - date - priority */}
             <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500 mb-3 pl-7">
               {app.location && (
                 <span className="flex items-center gap-1">
@@ -153,7 +153,7 @@ const ApplicationTable = ({
         </p>
       </div>
 
-      {/* â”€â”€ DESKTOP: full table (hidden on mobile) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* DESKTOP: full table (hidden on mobile) */}
       <div className="hidden sm:block rounded-2xl border border-white/5 bg-[#18181B] shadow-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full">
@@ -208,7 +208,7 @@ const ApplicationTable = ({
                   <td className="px-5 py-4 hidden md:table-cell">
                     <div className="flex items-center gap-1.5 text-sm text-neutral-400">
                       <BsGeoAlt className="text-neutral-500 shrink-0" />
-                      <span className="truncate max-w-[120px]">{app.location || "â€”"}</span>
+                      <span className="truncate max-w-[120px]">{app.location || "—"}</span>
                     </div>
                   </td>
                   <td className="px-5 py-4 hidden lg:table-cell">
@@ -262,3 +262,4 @@ const ApplicationTable = ({
 };
 
 export default ApplicationTable;
+

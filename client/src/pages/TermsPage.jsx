@@ -1,4 +1,4 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import PublicNavbar from "../components/common/PublicNavbar";
 import Logo from "../components/common/Logo";
 
@@ -100,7 +100,7 @@ const TermsPage = () => (
         <ul className="list-disc pl-6 space-y-2">
           <li>Scheduled maintenance</li>
           <li>Infrastructure issues beyond our control</li>
-          <li>Server cold starts on our free hosting tier (typically 30â€“60 seconds)</li>
+          <li>Server cold starts on our free hosting tier (typically 30—60 seconds)</li>
         </ul>
         <p>We will endeavour to minimise disruptions and notify users of significant planned maintenance.</p>
       </Section>
@@ -116,7 +116,7 @@ const TermsPage = () => (
       </Section>
 
       <Section id="limitation-of-liability" title="8. Limitation of Liability">
-        <p>To the maximum extent permitted by applicable law, HireFlow and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages â€” including loss of profits, data, or goodwill â€” arising from your use of or inability to use the Service.</p>
+        <p>To the maximum extent permitted by applicable law, HireFlow and its creators shall not be liable for any indirect, incidental, special, consequential, or punitive damages — including loss of profits, data, or goodwill — arising from your use of or inability to use the Service.</p>
       </Section>
 
       <Section id="termination" title="9. Termination">
@@ -147,6 +147,7 @@ const TermsPage = () => (
 );
 
 export default TermsPage;
+
 
 
 
