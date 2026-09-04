@@ -1,3 +1,5 @@
+import { useId } from "react";
+
 /**
  * HireFlow Logo — SVG mark + wordmark, all inline SVG (crisp at any size).
  *
@@ -10,8 +12,15 @@
  * The mark is a stylised "H" whose crossbar becomes a right-pointing
  * chevron arrow — symbolising forward movement through a hiring pipeline.
  * Colours use the project's indigo→purple gradient.
+ *
+ * BUG-17: useId() ensures each Logo instance gets unique gradient IDs so
+ * multiple Logos on the same page (navbar + footer) don't share/steal gradients.
  */
 const Logo = ({ size = 32, showText = true, className = "", textClass = "" }) => {
+  // BUG-17: unique IDs per instance to avoid duplicate SVG defs in the DOM
+  const uid      = useId().replace(/:/g, "");
+  const gradId   = `hf-grad-${uid}`;
+  const arrowId  = `hf-arrow-${uid}`;
   const markSize = size;
 
   return (
@@ -26,18 +35,18 @@ const Logo = ({ size = 32, showText = true, className = "", textClass = "" }) =>
         aria-hidden="true"
       >
         <defs>
-          <linearGradient id="hf-grad" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#6366F1" />
+          <linearGradient id={gradId} x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stopColor="#6366F1" />
             <stop offset="100%" stopColor="#8B5CF6" />
           </linearGradient>
-          <linearGradient id="hf-arrow-grad" x1="0" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#A5B4FC" />
+          <linearGradient id={arrowId} x1="0" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stopColor="#A5B4FC" />
             <stop offset="100%" stopColor="#C4B5FD" />
           </linearGradient>
         </defs>
 
         {/* Rounded square background */}
-        <rect width="40" height="40" rx="10" fill="url(#hf-grad)" />
+        <rect width="40" height="40" rx="10" fill={`url(#${gradId})`} />
 
         {/* Left vertical bar of H */}
         <rect x="8" y="9" width="5.5" height="22" rx="2.5" fill="white" />
@@ -47,11 +56,11 @@ const Logo = ({ size = 32, showText = true, className = "", textClass = "" }) =>
 
         {/* Crossbar arrow — chevron pointing right */}
         {/* Horizontal shaft */}
-        <rect x="13.5" y="18.5" width="13" height="3" rx="1.5" fill="url(#hf-arrow-grad)" />
+        <rect x="13.5" y="18.5" width="13" height="3" rx="1.5" fill={`url(#${arrowId})`} />
         {/* Arrowhead */}
         <path
           d="M24 14.5 L31.5 20 L24 25.5"
-          stroke="url(#hf-arrow-grad)"
+          stroke={`url(#${arrowId})`}
           strokeWidth="2.8"
           strokeLinecap="round"
           strokeLinejoin="round"

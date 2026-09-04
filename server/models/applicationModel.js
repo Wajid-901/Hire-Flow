@@ -6,7 +6,7 @@ const applicationSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: false,
+      required: true,
     },
     companyName: {
       type: String,

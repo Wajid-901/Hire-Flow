@@ -9,11 +9,12 @@ import {
   changePassword 
 } from "../controllers/authController.js";
 import { authenticateUser } from "../middleware/authMiddleware.js";
+import { validateRegister }  from "../middleware/validateRegister.js";
 
 const router = express.Router();
 
 // Public routes — no JWT required
-router.post("/register", registerUser);
+router.post("/register", validateRegister, registerUser);
 router.post("/login", loginUser);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);

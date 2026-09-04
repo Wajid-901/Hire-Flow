@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsEnvelopeFill, BsGithub, BsCheckCircleFill, BsArrowLeft } from "react-icons/bs";
 import Logo from "../components/common/Logo";
 import PublicNavbar from "../components/common/PublicNavbar";
 import axiosInstance from "../api/axiosInstance";
+import useAuth from "../hooks/useAuth";
 
 const Footer = () => (
   <footer className="border-t border-white/5 bg-[#09090B] py-10">
@@ -23,15 +24,49 @@ const Footer = () => (
 const inputClass = "w-full px-4 py-3 rounded-xl bg-zinc-800 border border-zinc-700 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all";
 const labelClass = "block text-sm font-medium text-zinc-300 mb-1.5";
 
+// Simple but effective email format check
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
 const ContactPage = () => {
-  const [form, setForm]             = useState({ name: "", email: "", subject: "", message: "" });
-  const [loading, setLoading]       = useState(false);
-  const [sent, setSent]             = useState(false);
+  const { user } = useAuth();
+  const navigate  = useNavigate();
+
+  const [form, setForm]               = useState({ name: "", email: "", subject: "", message: "" });
+  const [loading, setLoading]         = useState(false);
+  const [sent, setSent]               = useState(false);
   const [submitError, setSubmitError] = useState("");
-  const navigate = useNavigate();
+  const [emailError, setEmailError]   = useState(""); // inline email validation
+
+  // NEW FEATURE: Auto-fill name + email for logged-in users
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name:  prev.name  || user.name  || "",
+        email: prev.email || user.email || "",
+      }));
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Real-time email validation feedback
+    if (name === "email") {
+      setEmailError(value && !EMAIL_RE.test(value) ? "Please enter a valid email address." : "");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Client-side email guard before hitting the server
+    if (!EMAIL_RE.test(form.email.trim())) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+
     setLoading(true);
     setSubmitError("");
     try {
@@ -141,7 +176,12 @@ const ContactPage = () => {
               <h3 className="text-2xl font-bold text-white">Message sent!</h3>
               <p className="text-neutral-400">Thanks for reaching out. We will get back to you within 24-48 hours.</p>
               <button
-                onClick={() => { setSent(false); setForm({ name: "", email: "", subject: "", message: "" }); setSubmitError(""); }}
+                onClick={() => {
+                  setSent(false);
+                  // Keep name/email pre-filled for the next message, clear content only
+                  setForm((prev) => ({ ...prev, subject: "", message: "" }));
+                  setSubmitError("");
+                }}
                 className="mt-2 px-6 py-2.5 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm font-medium hover:bg-zinc-700 transition-all"
               >
                 Send another message
@@ -149,39 +189,59 @@ const ContactPage = () => {
             </div>
           ) : (
             <div className="bg-[#18181B] border border-white/5 rounded-2xl p-8">
-              <h3 className="text-xl font-bold text-white mb-6">Send a message</h3>
+              <h3 className="text-xl font-bold text-white mb-1">Send a message</h3>
+              {user && (
+                <p className="text-xs text-indigo-400 mb-5">
+                  Signed in as <span className="font-semibold">{user.email}</span> — your details are pre-filled.
+                </p>
+              )}
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label className={labelClass}>Your Name</label>
                     <input
                       type="text"
+                      name="name"
                       required
                       placeholder="John Doe"
                       value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      onChange={handleChange}
                       className={inputClass}
                     />
                   </div>
                   <div>
-                    <label className={labelClass}>Email Address</label>
+                    <label className={labelClass}>
+                      Email Address
+                      {/* Show lock icon for pre-filled authenticated users */}
+                      {user && (
+                        <span className="ml-1.5 text-[10px] font-normal text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded-full">
+                          auto-filled
+                        </span>
+                      )}
+                    </label>
                     <input
                       type="email"
+                      name="email"
                       required
                       placeholder="you@example.com"
                       value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className={inputClass}
+                      onChange={handleChange}
+                      className={`${inputClass} ${emailError ? "border-red-500 focus:ring-red-500" : ""}`}
+                      // Logged-in users: still editable in case they want to use a different address
                     />
+                    {emailError && (
+                      <p className="mt-1.5 text-xs text-red-400">{emailError}</p>
+                    )}
                   </div>
                 </div>
 
                 <div>
                   <label className={labelClass}>Subject</label>
                   <select
+                    name="subject"
                     value={form.subject}
                     required
-                    onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                    onChange={handleChange}
                     className={inputClass}
                   >
                     <option value="">Select a topic</option>
@@ -196,11 +256,12 @@ const ContactPage = () => {
                 <div>
                   <label className={labelClass}>Message</label>
                   <textarea
+                    name="message"
                     required
                     rows={6}
                     placeholder="Tell us more..."
                     value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    onChange={handleChange}
                     className={`${inputClass} resize-none`}
                   />
                 </div>
@@ -213,7 +274,7 @@ const ContactPage = () => {
 
                 <button
                   type="submit"
-                  disabled={loading}
+                  disabled={loading || !!emailError}
                   className="w-full py-3.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold shadow-lg shadow-indigo-600/30 transition-all hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
                 >
                   {loading ? (

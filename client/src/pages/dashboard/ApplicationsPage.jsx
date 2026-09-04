@@ -24,9 +24,10 @@ const ApplicationsPage = () => {
   const [sortBy, setSortBy]                     = useState("newest");
   const [showFilters, setShowFilters]           = useState(false);
   const [selectedApplications, setSelectedApplications] = useState([]);
+  const [pendingDeleteId, setPendingDeleteId]         = useState(null); // BUG-12: inline confirm instead of window.confirm
+  const [pendingBulkDelete, setPendingBulkDelete]     = useState(false);
 
-  useEffect(() => { fetchApplications(); }, []);
-
+  // BUG-08: declare fetchApplications BEFORE the useEffect that calls it
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -40,6 +41,8 @@ const ApplicationsPage = () => {
     }
   };
 
+  useEffect(() => { fetchApplications(); }, []);
+
   const handleAddApplication = () => {
     setEditingApplication(null);
     setIsModalOpen(true);
@@ -50,8 +53,14 @@ const ApplicationsPage = () => {
     setIsModalOpen(true);
   };
 
+  // BUG-12: inline confirm state — setPendingDeleteId triggers a confirm bar
   const handleDeleteApplication = async (id) => {
-    if (!window.confirm("Delete this application?")) return;
+    setPendingDeleteId(id);
+  };
+
+  const confirmDelete = async () => {
+    const id = pendingDeleteId;
+    setPendingDeleteId(null);
     try {
       await deleteApplication(id);
       setSelectedApplications((prev) => prev.filter((x) => x !== id));
@@ -62,16 +71,21 @@ const ApplicationsPage = () => {
     }
   };
 
+  // BUG-05: wrap in try/catch so API failures show an error toast
   const handleSubmitApplication = async (data) => {
-    if (editingApplication) {
-      await updateApplication(editingApplication._id, data);
-      toast.success("Application updated", { title: data.companyName });
-    } else {
-      await createApplication(data);
-      toast.success("Application added", { title: data.companyName });
+    try {
+      if (editingApplication) {
+        await updateApplication(editingApplication._id, data);
+        toast.success("Application updated", { title: data.companyName });
+      } else {
+        await createApplication(data);
+        toast.success("Application added", { title: data.companyName });
+      }
+      setIsModalOpen(false);
+      fetchApplications();
+    } catch {
+      toast.error("Failed to save application. Please try again.");
     }
-    setIsModalOpen(false);
-    fetchApplications();
   };
 
   // ─── Filtering + sorting (client-side, instant) ───────────────────────────
@@ -113,9 +127,11 @@ const ApplicationsPage = () => {
     return list;
   }, [applications, searchQuery, statusFilter, sortBy]);
 
-  // Bulk delete
-  const handleBulkDelete = async () => {
-    if (!window.confirm(`Delete ${selectedApplications.length} application(s)?`)) return;
+  // BUG-12: inline bulk confirm
+  const handleBulkDelete = () => setPendingBulkDelete(true);
+
+  const confirmBulkDelete = async () => {
+    setPendingBulkDelete(false);
     try {
       await Promise.all(selectedApplications.map((id) => deleteApplication(id)));
       toast.success(`${selectedApplications.length} application${selectedApplications.length > 1 ? "s" : ""} deleted`);
@@ -142,7 +158,7 @@ const ApplicationsPage = () => {
       Notes:         (a.notes || "").replace(/,/g, ";"),
     }));
 
-    const headers = Object.keys(rows[0]).join(",");
+    const headers = Object.keys(rows[0]).map((h) => `"${h}"`).join(","); // BUG-09: quote headers
     const body    = rows.map((r) => Object.values(r).map((v) => `"${v}"`).join(","));
     const csv     = [headers, ...body].join("\n");
     const url     = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
@@ -298,6 +314,44 @@ const ApplicationsPage = () => {
             className="text-xs text-zinc-400 hover:text-white transition-colors ml-auto"
           >
             Clear selection
+          </button>
+        </div>
+      )}
+
+      {/* BUG-12: Inline single-delete confirm bar */}
+      {pendingDeleteId && (
+        <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
+          <span className="text-sm text-red-400 font-medium">Delete this application? This cannot be undone.</span>
+          <button
+            onClick={confirmDelete}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500 text-white text-xs font-semibold hover:bg-red-400 transition-all"
+          >
+            Yes, delete
+          </button>
+          <button
+            onClick={() => setPendingDeleteId(null)}
+            className="text-xs text-zinc-400 hover:text-white transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      )}
+
+      {/* BUG-12: Inline bulk-delete confirm bar */}
+      {pendingBulkDelete && (
+        <div className="mb-4 flex items-center gap-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20">
+          <span className="text-sm text-red-400 font-medium">Delete {selectedApplications.length} application{selectedApplications.length > 1 ? "s" : ""}? This cannot be undone.</span>
+          <button
+            onClick={confirmBulkDelete}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500 text-white text-xs font-semibold hover:bg-red-400 transition-all"
+          >
+            Yes, delete all
+          </button>
+          <button
+            onClick={() => setPendingBulkDelete(false)}
+            className="text-xs text-zinc-400 hover:text-white transition-colors"
+          >
+            Cancel
           </button>
         </div>
       )}

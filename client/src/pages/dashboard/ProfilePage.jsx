@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   BsPencil, BsCheckLg, BsXLg, BsPersonFill,
   BsEnvelopeFill, BsShieldFill, BsCalendarFill,
@@ -215,9 +216,9 @@ const ProfilePage = () => {
             <h3 className="text-lg font-bold text-white mb-2">Account Stats</h3>
             <p className="text-sm text-zinc-400 mb-5">
               Head to the{" "}
-              <a href="/dashboard/applications" className="text-indigo-400 hover:underline">
+              <Link to="/dashboard/applications" className="text-indigo-400 hover:underline">
                 Applications
-              </a>{" "}
+              </Link>{" "}
               page for detailed tracking.
             </p>
 

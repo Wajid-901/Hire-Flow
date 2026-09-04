@@ -1,5 +1,4 @@
-import { createContext, useEffect, useMemo, useState } from "react";
-
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { getCurrentUser } from "../api/authApi";
 
 export const AuthContext = createContext();
@@ -10,16 +9,19 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(user);
 
-  const login = ({ user, token }) => {
+  // BUG-07: useCallback so login/logout have stable references across renders.
+  // Without this, any useEffect that depends on { login } or { logout } would
+  // re-run on every render because they'd always be new function references.
+  const login = useCallback(({ user, token }) => {
     localStorage.setItem("token", token);
     setUser(user);
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
     setLoading(false);
-  };
+  }, []);
 
   useEffect(() => {
     const restoreSession = async () => {
@@ -42,7 +44,7 @@ export function AuthProvider({ children }) {
     };
 
     restoreSession();
-  }, []);
+  }, [logout]);
 
   const value = useMemo(
     () => ({
@@ -52,7 +54,7 @@ export function AuthProvider({ children }) {
       login,
       logout,
     }),
-    [user, loading, isAuthenticated],
+    [user, loading, isAuthenticated, login, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

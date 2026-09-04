@@ -277,9 +277,9 @@ const AnalyticsPage = () => {
                   <YAxis tick={{ fill: "#71717a", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
                   <Tooltip content={<CustomTooltip />} />
                   <Bar dataKey="count" name="Applications" radius={[6, 6, 0, 0]}>
-                    {weekdayData.map((entry, i) => (
+                    {weekdayData.map((entry) => (
                       <Cell
-                        key={i}
+                        key={entry.label}
                         fill={entry.count > 0 ? "#6366F1" : "#27272a"}
                         opacity={entry.count > 0 ? 0.85 : 1}
                       />

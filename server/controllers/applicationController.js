@@ -125,13 +125,24 @@ export const updateApplication = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
 
-    // Filter ensures BOTH conditions: correct document AND correct owner.
-    // If the _id exists but belongs to another user, findOneAndUpdate
-    // returns null — same as "not found". This prevents data leakage.
+    // Allowlist — only these fields may be updated. Prevents field injection
+    // (e.g. a client sending { user: "otherUserId" } to hijack ownership).
+    const ALLOWED = [
+      "companyName", "jobRole", "jobLink", "appliedDate", "status",
+      "source", "location", "workType", "resumeVersion", "priority",
+      "notes", "followUpDate",
+    ];
+    const updates = {};
+    for (const key of ALLOWED) {
+      if (Object.prototype.hasOwnProperty.call(req.body, key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
     const application = await Application.findOneAndUpdate(
       { _id: id, user: userId },        // filter: ownership enforced at DB level
-      { $set: req.body },               // explicit $set: partial update, never replaces the whole document
-      { new: true, runValidators: true } // new: return updated doc; runValidators: enforce schema enum/type rules
+      { $set: updates },                 // explicit $set of allowlisted fields only
+      { new: true, runValidators: true } // new: return updated doc; runValidators: enforce schema rules
     );
 
     if (!application) {

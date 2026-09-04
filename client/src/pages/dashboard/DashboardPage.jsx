@@ -17,10 +17,7 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
+  // BUG-08: declare fetchApplications BEFORE the useEffect that calls it
   const fetchApplications = async () => {
     try {
       setLoading(true);
@@ -33,6 +30,10 @@ const DashboardPage = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
 
   // Stats derived from real data — status values are capital-first (backend enum)
   const stats = {
@@ -168,7 +169,7 @@ const DashboardPage = () => {
 
             <div className="space-y-6">
               <ProgressCard
-                total={Math.max(stats.total, 10)}
+                total={stats.total}
                 applied={stats.total}
                 interviewing={stats.interviews}
                 offers={stats.offers}
