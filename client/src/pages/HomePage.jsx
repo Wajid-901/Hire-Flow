@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { 
-  BsCheckCircleFill, 
+import {
+  BsCheckCircleFill,
   BsBarChartFill,
   BsCalendar3,
   BsFileEarmarkText,
@@ -12,9 +12,11 @@ import {
 } from "react-icons/bs";
 import { useState } from "react";
 import Logo from "../components/common/Logo";
+import useAuth from "../hooks/useAuth";
 
 const HomePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, loading } = useAuth();
 
   const features = [
     {
@@ -134,7 +136,7 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link to="/">
+            <Link to={isAuthenticated ? "/dashboard" : "/"}>
               <Logo size={32} />
             </Link>
 
@@ -148,18 +150,31 @@ const HomePage = () => {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
-              <Link
-                to="/login"
-                className="text-sm font-medium text-white hover:text-indigo-400 transition-colors"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/register"
-                className="text-sm font-semibold px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
-              >
-                Get Started Free
-              </Link>
+              {!loading && (
+                isAuthenticated ? (
+                  <Link
+                    to="/dashboard"
+                    className="text-sm font-semibold px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
+                  >
+                    Go to Dashboard
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      className="text-sm font-medium text-white hover:text-indigo-400 transition-colors"
+                    >
+                      Log in
+                    </Link>
+                    <Link
+                      to="/register"
+                      className="text-sm font-semibold px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
+                    >
+                      Get Started Free
+                    </Link>
+                  </>
+                )
+              )}
             </div>
 
             {/* Mobile Menu Button */}
@@ -179,12 +194,26 @@ const HomePage = () => {
               <a href="#testimonials" onClick={() => setMobileMenuOpen(false)} className="block text-neutral-400 hover:text-white transition-colors">Testimonials</a>
               <a href="#faq" onClick={() => setMobileMenuOpen(false)} className="block text-neutral-400 hover:text-white transition-colors">FAQ</a>
               <div className="pt-4 border-t border-white/5 space-y-3">
-                <Link to="/login" className="block text-center py-2 text-white hover:text-indigo-400 transition-colors">
-                  Log in
-                </Link>
-                <Link to="/register" className="block text-center py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold">
-                  Get Started Free
-                </Link>
+                {!loading && (
+                  isAuthenticated ? (
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block text-center py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold"
+                    >
+                      Go to Dashboard
+                    </Link>
+                  ) : (
+                    <>
+                      <Link to="/login" className="block text-center py-2 text-white hover:text-indigo-400 transition-colors">
+                        Log in
+                      </Link>
+                      <Link to="/register" className="block text-center py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold">
+                        Get Started Free
+                      </Link>
+                    </>
+                  )
+                )}
               </div>
             </div>
           )}
@@ -217,13 +246,23 @@ const HomePage = () => {
 
           {/* CTA Buttons */}
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Link
-              to="/register"
-              className="group flex items-center gap-2 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-8 py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:-translate-y-0.5"
-            >
-              Start Tracking for Free
-              <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className="group flex items-center gap-2 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-8 py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:-translate-y-0.5"
+              >
+                Go to Dashboard
+                <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            ) : (
+              <Link
+                to="/register"
+                className="group flex items-center gap-2 text-base font-semibold text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 px-8 py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:-translate-y-0.5"
+              >
+                Start Tracking for Free
+                <BsArrowRight className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            )}
             
             <a
               href="#features"
@@ -391,10 +430,10 @@ const HomePage = () => {
               Join thousands of successful job seekers using HireFlow to organize their search and land amazing opportunities.
             </p>
             <Link
-              to="/register"
+              to={isAuthenticated ? "/dashboard" : "/register"}
               className="inline-flex items-center gap-2 text-lg font-semibold px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white shadow-lg shadow-indigo-600/30 hover:shadow-indigo-600/50 transition-all hover:-translate-y-0.5"
             >
-              Get Started for Free
+              {isAuthenticated ? "Go to Dashboard" : "Get Started for Free"}
               <BsArrowRight />
             </Link>
           </div>

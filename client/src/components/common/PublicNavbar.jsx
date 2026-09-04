@@ -1,4 +1,4 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import useAuth from "../../hooks/useAuth";
 
@@ -8,7 +8,7 @@ const PublicNavbar = () => {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#09090B]/80 border-b border-white/5">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link to="/"><Logo size={30} /></Link>
+        <Link to={isAuthenticated ? "/dashboard" : "/"}><Logo size={30} /></Link>
         <div className="flex items-center gap-4 sm:gap-6">
           {!loading && (
             isAuthenticated ? (

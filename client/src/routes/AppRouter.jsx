@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ErrorBoundary from "../components/common/ErrorBoundary";
+import ScrollToTop from "../components/common/ScrollToTop";
 
 import HomePage from "../pages/HomePage";
 import LoginPage from "../pages/auth/LoginPage";
@@ -30,6 +31,7 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <ErrorBoundary>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about"          element={<AboutPage />} />

@@ -1,6 +1,6 @@
-﻿import { useState } from "react";
-import { Link } from "react-router-dom";
-import { BsEnvelopeFill, BsGithub, BsCheckCircleFill } from "react-icons/bs";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { BsEnvelopeFill, BsGithub, BsCheckCircleFill, BsArrowLeft } from "react-icons/bs";
 import Logo from "../components/common/Logo";
 import PublicNavbar from "../components/common/PublicNavbar";
 import axiosInstance from "../api/axiosInstance";
@@ -28,6 +28,7 @@ const ContactPage = () => {
   const [loading, setLoading]       = useState(false);
   const [sent, setSent]             = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -48,6 +49,17 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-[#09090B] text-white">
       <PublicNavbar />
+
+      {/* Back button */}
+      <div className="max-w-5xl mx-auto px-6 pt-6">
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-sm text-neutral-400 hover:text-white transition-colors group"
+        >
+          <BsArrowLeft className="group-hover:-translate-x-0.5 transition-transform" />
+          Back
+        </button>
+      </div>
 
       {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 py-20 text-center">
