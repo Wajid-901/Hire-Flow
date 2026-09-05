@@ -1,27 +1,64 @@
 import express from "express";
-import { 
-  loginUser, 
-  registerUser, 
+import rateLimit from "express-rate-limit";
+
+import {
+  loginUser,
+  registerUser,
   getMe,
   updateMe,
-  forgotPassword, 
-  resetPassword, 
-  changePassword 
+  deleteMe,
+  forgotPassword,
+  resetPassword,
+  changePassword,
 } from "../controllers/authController.js";
+
 import { authenticateUser } from "../middleware/authMiddleware.js";
-import { validateRegister }  from "../middleware/validateRegister.js";
+import {
+  validateRegister,
+  validateLogin,
+  validateForgotPassword,
+  validateResetPassword,
+  validateChangePassword,
+} from "../validators/authValidator.js";
 
 const router = express.Router();
 
-// Public routes — no JWT required
-router.post("/register", validateRegister, registerUser);
-router.post("/login", loginUser);
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password/:token", resetPassword);
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: "Too many attempts, please try again in 15 minutes.",
+  },
+});
 
-// Protected routes — require authentication
+// Public routes
+router.post("/register", authLimiter, validateRegister, registerUser);
+router.post("/login", authLimiter, validateLogin, loginUser);
+router.post(
+  "/forgot-password",
+  authLimiter,
+  validateForgotPassword,
+  forgotPassword,
+);
+router.post(
+  "/reset-password/:token",
+  authLimiter,
+  validateResetPassword,
+  resetPassword,
+);
+
+// Protected routes
 router.get("/me", authenticateUser, getMe);
 router.patch("/me", authenticateUser, updateMe);
-router.post("/change-password", authenticateUser, changePassword);
+router.delete("/me", authenticateUser, deleteMe);
+router.post(
+  "/change-password",
+  authenticateUser,
+  validateChangePassword,
+  changePassword,
+);
 
 export default router;

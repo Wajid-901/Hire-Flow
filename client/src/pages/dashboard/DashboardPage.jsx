@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsPlus, BsArrowRight, BsLightningFill } from "react-icons/bs";
 import StatsCard from "../../components/dashboard/StatsCard";
@@ -71,29 +71,34 @@ const DashboardPage = () => {
   ];
 
   // Last 4 applications sorted by date
-  const recentApplications = [...applications]
-    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-    .slice(0, 4)
-    .map((app) => ({
-      id:       app._id,
-      company:  app.companyName,
-      role:     app.jobRole,
-      location: app.location || "Not specified",
-      date:     new Date(app.appliedDate || app.createdAt).toLocaleDateString("en-US", {
-        month: "short",
-        day:   "numeric",
-      }),
-      status: app.status || "Applied",
-    }));
+  const recentApplications = useMemo(
+    () =>
+      [...applications]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 4)
+        .map((app) => ({
+          id:       app._id,
+          company:  app.companyName,
+          role:     app.jobRole,
+          location: app.location || "Not specified",
+          date:     new Date(app.appliedDate || app.createdAt).toLocaleDateString("en-US", {
+            month: "short",
+            day:   "numeric",
+          }),
+          status:        app.status || "Applied",
+          interviewDate: app.interviewDate || null,
+        })),
+    [applications]
+  );
 
   // Activity bars — count apps per weekday over last 7 days
-  const activityData = (() => {
+  const activityData = useMemo(() => {
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const counts = [0, 0, 0, 0, 0, 0, 0];
     const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
     applications.forEach((app) => {
       const d = new Date(app.appliedDate || app.createdAt);
-      if (d >= cutoff) counts[d.getDay()]++;
+      if (d.getTime() >= cutoff) counts[d.getDay()]++;
     });
     // Rotate so today is last
     const today = new Date().getDay();
@@ -103,7 +108,7 @@ const DashboardPage = () => {
       ordered.push({ label: days[idx], value: counts[idx] });
     }
     return ordered;
-  })();
+  }, [applications]);
 
   const getGreeting = () => {
     const h = new Date().getHours();

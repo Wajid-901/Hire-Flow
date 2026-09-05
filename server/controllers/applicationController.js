@@ -1,5 +1,76 @@
 import Application from "../models/applicationModel.js";
 
+const APPLICATION_FIELDS = [
+  "companyName",
+  "jobRole",
+  "jobLink",
+  "appliedDate",
+  "status",
+  "source",
+  "location",
+  "workType",
+  "resumeVersion",
+  "priority",
+  "notes",
+  "followUpDate",
+  "interviewDate",
+];
+
+const trimIfString = (value) =>
+  typeof value === "string" ? value.trim() : value;
+
+const buildCreatePayload = (body) => {
+  const payload = {};
+
+  for (const key of APPLICATION_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(body, key)) continue;
+
+    const value = body[key];
+
+    if (key === "appliedDate") {
+      if (value === "" || value === undefined || value === null) continue;
+      payload[key] = value;
+      continue;
+    }
+
+    if (key === "followUpDate" || key === "interviewDate") {
+      payload[key] =
+        value === "" || value === undefined || value === null ? null : value;
+      continue;
+    }
+
+    payload[key] = trimIfString(value);
+  }
+
+  return payload;
+};
+
+const buildUpdatePayload = (body) => {
+  const payload = {};
+
+  for (const key of APPLICATION_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(body, key)) continue;
+
+    const value = body[key];
+
+    if (key === "appliedDate") {
+      if (value === "" || value === undefined || value === null) continue;
+      payload[key] = value;
+      continue;
+    }
+
+    if (key === "followUpDate" || key === "interviewDate") {
+      payload[key] =
+        value === "" || value === undefined || value === null ? null : value;
+      continue;
+    }
+
+    payload[key] = trimIfString(value);
+  }
+
+  return payload;
+};
+
 // @desc    Create new application
 // @route   POST /api/applications
 // @access  Private
@@ -7,10 +78,10 @@ export const createApplication = async (req, res) => {
   try {
     const { userId } = req.user;
 
-    const application = await Application.create({
-      ...req.body,
-      user: userId,
-    });
+    const data = buildCreatePayload(req.body);
+    data.user = userId;
+
+    const application = await Application.create(data);
 
     return res.status(201).json({
       success: true,
@@ -125,24 +196,17 @@ export const updateApplication = async (req, res) => {
     const { id } = req.params;
     const { userId } = req.user;
 
-    // Allowlist — only these fields may be updated. Prevents field injection
-    // (e.g. a client sending { user: "otherUserId" } to hijack ownership).
-    const ALLOWED = [
-      "companyName", "jobRole", "jobLink", "appliedDate", "status",
-      "source", "location", "workType", "resumeVersion", "priority",
-      "notes", "followUpDate",
-    ];
-    const updates = {};
-    for (const key of ALLOWED) {
-      if (Object.prototype.hasOwnProperty.call(req.body, key)) {
-        updates[key] = req.body[key];
-      }
+    const updates = buildUpdatePayload(req.body);
+
+    if ("interviewDate" in updates) {
+      updates.reminder24hSent = false;
+      updates.reminder1hSent = false;
     }
 
     const application = await Application.findOneAndUpdate(
-      { _id: id, user: userId },        // filter: ownership enforced at DB level
-      { $set: updates },                 // explicit $set of allowlisted fields only
-      { new: true, runValidators: true } // new: return updated doc; runValidators: enforce schema rules
+      { _id: id, user: userId },
+      { $set: updates },
+      { new: true, runValidators: true }
     );
 
     if (!application) {

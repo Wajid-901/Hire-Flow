@@ -72,12 +72,19 @@ const RecentApplications = ({ applications = [] }) => {
                     </div>
                   </div>
 
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold border whitespace-nowrap ${style.bg} ${style.text} ${style.border}`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
-                    {item.status}
-                  </span>
+                  <div className="flex flex-col items-end gap-1.5 shrink-0">
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold border whitespace-nowrap ${style.bg} ${style.text} ${style.border}`}
+                    >
+                      <span className={`w-1.5 h-1.5 rounded-full ${style.dot}`} />
+                      {item.status}
+                    </span>
+                    {item.interviewDate && (
+                      <span className="text-[11px] font-medium text-purple-300 bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">
+                        📅 {new Date(item.interviewDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             );

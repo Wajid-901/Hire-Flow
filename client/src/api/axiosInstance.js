@@ -17,14 +17,17 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// BUG-04: Handle 401 responses globally — expired/invalid token forces logout
+// Handle 401 responses globally — expired/invalid JWT token forces logout
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url || "";
+    // Don't auto-redirect on login failures (user is just typing credentials)
+    const isLoginRequest = url.includes("/auth/login");
+
+    if (error.response?.status === 401 && !isLoginRequest) {
       // Clear stale token and redirect to login
       localStorage.removeItem("token");
-      // Use window.location so the AuthContext resets on next load
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";
       }

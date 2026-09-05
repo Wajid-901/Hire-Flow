@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HireFlow — Interview Preparation Guide</title>
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo:     #6366f1;
+      --indigo-dark:#4f46e5;
+      --purple:     #8b5cf6;
+      --emerald:    #10b981;
+      --amber:      #f59e0b;
+      --rose:       #f43f5e;
+      --sky:        #0ea5e9;
+      --bg:         #ffffff;
+      --surface:    #f8fafc;
+      --border:     #e2e8f0;
+      --text:       #0f172a;
+      --muted:      #64748b;
+      --code-bg:    #1e293b;
+      --code-text:  #e2e8f0;
+      --radius:     10px;
+    }
+
+    html { font-size: 16px; }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      padding: 0;
+    }
+
+    /* ─── Print Button (hidden in PDF) ────────────────────────────────── */
+    .print-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      padding: 12px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 20px rgba(99,102,241,0.3);
+    }
+
+    .print-bar-title {
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .print-bar-title span {
+      opacity: 0.7;
+      font-weight: 400;
+    }
+
+    .btn-pdf {
+      background: white;
+      color: var(--indigo-dark);
+      border: none;
+      padding: 9px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.2px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-pdf:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    }
+
+    /* ─── Page wrapper ─────────────────────────────────────────────────── */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 48px 80px;
+    }
+
+    /* ─── Cover ────────────────────────────────────────────────────────── */
+    .cover {
+      text-align: center;
+      padding: 60px 40px 56px;
+      background: linear-gradient(145deg, #f0f0ff 0%, #faf5ff 50%, #f0fdf4 100%);
+      border-radius: 20px;
+      border: 1px solid #ddd6fe;
+      margin-bottom: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .cover-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .cover-logo-mark {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 22px;
+      font-weight: 800;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.35);
+    }
+
+    .cover-logo-text {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      color: var(--text);
+    }
+
+    .cover-logo-text span {
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cover h1 {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1.5px;
+      color: var(--text);
+      margin-bottom: 14px;
+      line-height: 1.15;
+    }
+
+    .cover p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .cover-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .cover-tag {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    .cover-tag.indigo { color: var(--indigo); border-color: #c7d2fe; background: #eef2ff; }
+    .cover-tag.green  { color: var(--emerald); border-color: #a7f3d0; background: #ecfdf5; }
+    .cover-tag.amber  { color: var(--amber); border-color: #fde68a; background: #fffbeb; }
+
+    /* ─── TOC ──────────────────────────────────────────────────────────── */
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      margin-bottom: 56px;
+    }
+
+    .toc-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 32px;
+    }
+
+    .toc-list li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 0;
+      border-bottom: 1px solid transparent;
+      transition: color 0.15s;
+    }
+
+    .toc-list li a:hover { color: var(--indigo); }
+
+    .toc-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--indigo);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    /* ─── Phase header ─────────────────────────────────────────────────── */
+    .phase {
+      margin-bottom: 64px;
+      page-break-inside: avoid;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .phase-badge {
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .phase-title {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--text);
+    }
+
+    /* ─── Headings ─────────────────────────────────────────────────────── */
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 40px 0 16px;
+      letter-spacing: -0.4px;
+      padding-left: 14px;
+      border-left: 3px solid var(--indigo);
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--indigo-dark);
+      margin: 28px 0 10px;
+      letter-spacing: -0.2px;
+    }
+
+    h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 20px 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* ─── Paragraph ────────────────────────────────────────────────────── */
+    p {
+      font-size: 15px;
+      color: #334155;
+      margin-bottom: 14px;
+      line-height: 1.8;
+    }
+
+    /* ─── Lists ────────────────────────────────────────────────────────── */
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      font-size: 15px;
+      color: #334155;
+      line-height: 1.75;
+      margin-bottom: 4px;
+    }
+
+    li strong { color: var(--text); }
+
+    /* ─── Code blocks ──────────────────────────────────────────────────── */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      font-size: 13px;
+      line-height: 1.7;
+      overflow-x: auto;
+      margin: 20px 0;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      border: 1px solid #334155;
+      page-break-inside: avoid;
+    }
+
+    code {
+      background: #f1f5f9;
+      color: #7c3aed;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+      border: 1px solid #e2e8f0;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+      border: none;
+      font-size: inherit;
+    }
+
+    /* ─── Tables ───────────────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      page-break-inside: avoid;
+    }
+
+    thead tr {
+      background: linear-gradient(135deg, var(--indigo), var(--purple));
+      color: white;
+    }
+
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:nth-child(even) { background: #f8fafc; }
+    tbody tr:hover { background: #f0f4ff; }
+
+    td {
+      padding: 11px 16px;
+      color: #334155;
+      vertical-align: top;
+      line-height: 1.6;
+    }
+
+    td code { font-size: 12px; }
+
+    td:first-child { font-weight: 600; color: var(--text); }
+
+    /* ─── Callout boxes ────────────────────────────────────────────────── */
+    .note, .hint, .warning, .tip, .important {
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+      line-height: 1.7;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      page-break-inside: avoid;
+    }
+
+    .callout-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .callout-body { flex: 1; }
+    .callout-body strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .callout-body p { margin: 0; font-size: 14px; }
+
+    .note      { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .note      .callout-body strong { color: #1d4ed8; }
+    .hint      { background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .hint      .callout-body strong { color: #15803d; }
+    .warning   { background: #fffbeb; border: 1px solid #fde68a; }
+    .warning   .callout-body strong { color: #b45309; }
+    .tip       { background: #faf5ff; border: 1px solid #ddd6fe; }
+    .tip       .callout-body strong { color: #7c3aed; }
+    .important { background: #fff1f2; border: 1px solid #fecdd3; }
+    .important .callout-body strong { color: #be123c; }
+
+    /* ─── Q&A blocks ───────────────────────────────────────────────────── */
+    .qa-block {
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+      page-break-inside: avoid;
+    }
+
+    .qa-q {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .qa-q::before { content: 'Q  '; color: #818cf8; font-weight: 800; }
+
+    .qa-a {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 16px 20px;
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.75;
+    }
+
+    .qa-a::before { content: 'A  '; color: var(--emerald); font-weight: 800; }
+
+    /* ─── Difficulty badges ────────────────────────────────────────────── */
+    .difficulty {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .diff-beginner   { background: #dcfce7; color: #15803d; }
+    .diff-intermediate { background: #dbeafe; color: #1d4ed8; }
+    .diff-advanced   { background: #faf5ff; color: #7c3aed; }
+    .diff-senior     { background: #fff1f2; color: #be123c; }
+
+    /* ─── Architecture diagram ─────────────────────────────────────────── */
+    .arch-diagram {
+      background: #0f172a;
+      color: #94a3b8;
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.9;
+      margin: 20px 0;
+      border: 1px solid #1e293b;
+    }
+
+    .arch-diagram .highlight { color: #818cf8; font-weight: 700; }
+    .arch-diagram .arrow     { color: #38bdf8; }
+    .arch-diagram .layer     { color: #4ade80; font-weight: 600; }
+    .arch-diagram .url       { color: #fb923c; }
+
+    /* ─── Horizontal rule ──────────────────────────────────────────────── */
+    hr {
+      border: none;
+      border-top: 2px solid var(--border);
+      margin: 48px 0;
+    }
+
+    /* ─── Section divider ──────────────────────────────────────────────── */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 48px 0 32px;
+    }
+
+    .section-divider-line { flex: 1; height: 1px; background: var(--border); }
+
+    .section-divider-text {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+    }
+
+    /* ─── Key numbers ──────────────────────────────────────────────────── */
+    .key-numbers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .kn-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .kn-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--indigo);
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kn-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* ─── Print styles ─────────────────────────────────────────────────── */
+    @media print {
+      .print-bar { display: none !important; }
+      .page { padding: 20px 32px; margin: 0; max-width: 100%; }
+      body { font-size: 14px; }
+
+      h1 { font-size: 28px !important; }
+      h2 { font-size: 18px !important; }
+
+      pre {
+        white-space: pre-wrap;
+        word-break: break-word;
+        font-size: 11px;
+      }
+
+      .cover { page-break-after: always; }
+      .toc   { page-break-after: always; }
+      .phase { page-break-before: auto; }
+      .qa-block, table, pre, .note, .hint, .warning { page-break-inside: avoid; }
+
+      @page {
+        margin: 20mm 18mm;
+        size: A4;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Print Bar -->
+  <div class="print-bar">
+    <div class="print-bar-title">
+      HireFlow Interview Guide &nbsp;<span>— Ready to export as PDF</span>
+    </div>
+    <button class="btn-pdf" onclick="window.print()">⬇ Download PDF</button>
+  </div>
+
+  <div class="page">
+
+    <!-- ── Cover ──────────────────────────────────────────────────────── -->
+    <div class="cover">
+      <div class="cover-logo">
+        <div class="cover-logo-mark">H</div>
+        <div class="cover-logo-text">Hire<span>Flow</span></div>
+      </div>
+      <h1>Complete Interview<br/>Preparation Guide</h1>
+      <p>Everything you need to confidently explain and defend every line of code in technical interviews. Study this before any interview.</p>
+      <div class="cover-tags">
+        <span class="cover-tag indigo">React 18</span>
+        <span class="cover-tag indigo">Node.js + Express</span>
+        <span class="cover-tag indigo">MongoDB Atlas</span>
+        <span class="cover-tag green">JWT Auth</span>
+        <span class="cover-tag green">Nodemailer</span>
+        <span class="cover-tag green">Deployed on Vercel + Render</span>
+        <span class="cover-tag amber">14 Phases</span>
+        <span class="cover-tag amber">40+ Interview Q&amp;A</span>
+      </div>
+    </div>
+
+    <!-- ── Table of Contents ──────────────────────────────────────────── -->
+    <div class="toc">
+      <div class="toc-title">Table of Contents</div>
+      <ul class="toc-list">
+        <li><a href="#p1"><span class="toc-num">1</span> High-Level Understanding</a></li>
+        <li><a href="#p2"><span class="toc-num">2</span> Folder-by-Folder Breakdown</a></li>
+        <li><a href="#p3"><span class="toc-num">3</span> File-by-File Analysis</a></li>
+        <li><a href="#p4"><span class="toc-num">4</span> JavaScript Concepts</a></li>
+        <li><a href="#p5"><span class="toc-num">5</span> React Concepts</a></li>
+        <li><a href="#p6"><span class="toc-num">6</span> Backend Concepts</a></li>
+        <li><a href="#p7"><span class="toc-num">7</span> MongoDB Deep Dive</a></li>
+        <li><a href="#p8"><span class="toc-num">8</span> Security Review</a></li>
+        <li><a href="#p9"><span class="toc-num">9</span> Performance Review</a></li>
+        <li><a href="#p10"><span class="toc-num">10</span> System Design &amp; Scalability</a></li>
+        <li><a href="#p11"><span class="toc-num">11</span> Interview Questions</a></li>
+        <li><a href="#p12"><span class="toc-num">12</span> Project Defense</a></li>
+        <li><a href="#p13"><span class="toc-num">13</span> Resume Preparation</a></li>
+        <li><a href="#p14"><span class="toc-num">★</span> Key Numbers Reference</a></li>
+      </ul>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 1 — HIGH LEVEL
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p1">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 1</span>
+        <span class="phase-title">High-Level Understanding</span>
+      </div>
+
+      <h2>What problem does HireFlow solve?</h2>
+      <p>When people apply for jobs, they use spreadsheets or sticky notes. They forget which companies they applied to, miss follow-up deadlines, cannot see patterns in their rejections, and have no insight into their own job search funnel.</p>
+      <p>HireFlow replaces the spreadsheet with a purpose-built web application that stores every job application, tracks it through a pipeline, visualises progress with real charts, and sends professional emails.</p>
+
+      <div class="hint">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Interview Tip</strong>
+          <p>Always start your explanation with the problem, not the technology. "I built X because Y problem existed" is far stronger than "I built X using React and Node.js."</p>
+        </div>
+      </div>
+
+      <h2>Who are the users?</h2>
+      <ul>
+        <li><strong>Students</strong> applying for internships or first jobs</li>
+        <li><strong>Professionals</strong> making career transitions</li>
+        <li><strong>Anyone</strong> applying to multiple companies who needs organisation</li>
+      </ul>
+
+      <h2>Overall Architecture</h2>
+      <div class="arch-diagram">
+<span class="layer">┌─────────────────────────────────────────────┐</span>
+<span class="layer">│              BROWSER (React SPA)            │</span>
+<span class="url">│      https://hireflow.vercel.app           │</span>
+<span class="layer">└─────────────────┬───────────────────────────┘</span>
+                  <span class="arrow">│ HTTPS + JSON</span>
+                  <span class="arrow">│ Authorization: Bearer &lt;JWT&gt;</span>
+                  <span class="arrow">▼</span>
+<span class="layer">┌─────────────────────────────────────────────┐</span>
+<span class="layer">│           EXPRESS API SERVER                │</span>
+<span class="url">│  https://hireflow-api-e53e.onrender.com     │</span>
+<span class="layer">│                                             │</span>
+<span class="highlight">│  Helmet → CORS → RateLimit → Routes →      │</span>
+<span class="highlight">│  AuthMiddleware → Zod → Controller          │</span>
+<span class="layer">└─────────────────┬───────────────────────────┘</span>
+                  <span class="arrow">│ Mongoose ODM</span>
+                  <span class="arrow">▼</span>
+<span class="layer">┌─────────────────────────────────────────────┐</span>
+<span class="layer">│           MONGODB ATLAS (Cloud)             │</span>
+<span class="url">│     Collections: users, applications        │</span>
+<span class="layer">└─────────────────────────────────────────────┘</span>
+      </div>
+
+      <h2>Technology Stack — With Reasons</h2>
+      <table>
+        <thead><tr><th>Technology</th><th>Layer</th><th>Why chosen over alternatives</th></tr></thead>
+        <tbody>
+          <tr><td>React 18</td><td>Frontend</td><td>Largest ecosystem, industry standard, component model. Vue = smaller ecosystem. Angular = too complex.</td></tr>
+          <tr><td>Vite</td><td>Build Tool</td><td>Starts in milliseconds. CRA was abandoned and slow.</td></tr>
+          <tr><td>Tailwind CSS</td><td>Styling</td><td>Utility classes = no separate CSS files, consistent design. No runtime overhead like Styled Components.</td></tr>
+          <tr><td>React Router v7</td><td>Routing</td><td>Declarative nested routes, protected route pattern.</td></tr>
+          <tr><td>Axios</td><td>HTTP</td><td>Interceptors auto-attach JWT. fetch() has no interceptors.</td></tr>
+          <tr><td>Recharts</td><td>Charts</td><td>React-native, composable. D3 is too low-level.</td></tr>
+          <tr><td>React Context</td><td>State</td><td>Sufficient for this scale. Redux = overkill + boilerplate.</td></tr>
+          <tr><td>Node.js + Express</td><td>Backend</td><td>Same language as frontend. Non-blocking I/O. Huge ecosystem.</td></tr>
+          <tr><td>MongoDB Atlas</td><td>Database</td><td>Flexible document model. Free tier. Job apps have variable fields.</td></tr>
+          <tr><td>Mongoose</td><td>ODM</td><td>Schema validation, middleware hooks, clean query syntax.</td></tr>
+          <tr><td>JWT</td><td>Auth</td><td>Stateless — scales horizontally without shared session store.</td></tr>
+          <tr><td>bcrypt</td><td>Security</td><td>Adaptive hashing. Industry standard. Argon2 is newer but less adopted.</td></tr>
+          <tr><td>Nodemailer</td><td>Email</td><td>Works with any SMTP. No vendor lock-in like SendGrid SDK.</td></tr>
+          <tr><td>Zod</td><td>Validation</td><td>Schema-first, excellent errors. Cleaner than Joi.</td></tr>
+          <tr><td>Helmet</td><td>Security</td><td>One line = 14 security headers. Alternative: manual = error-prone.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Complete Request-Response Lifecycle</h2>
+      <p>Here is every step that happens when a user clicks "Sign In":</p>
+      <ol>
+        <li>User types email + password, clicks Sign In</li>
+        <li>React calls <code>loginUser()</code> in <code>authApi.js</code> → <code>axios.post('/auth/login', {email, password})</code></li>
+        <li>Axios interceptor runs — adds <code>Authorization: Bearer &lt;token&gt;</code> header (from localStorage)</li>
+        <li>Request hits: <code>https://hireflow-api-e53e.onrender.com/api/auth/login</code></li>
+        <li>Express middleware chain runs: Helmet → CORS → express.json() → authLimiter → Router</li>
+        <li>Router matches <code>POST /api/auth/login</code> → calls <code>loginUser</code> controller</li>
+        <li>Controller: <code>User.findOne({email})</code> → queries MongoDB → <code>bcrypt.compare()</code> → <code>jwt.sign()</code></li>
+        <li>Response: <code>200 { success: true, token: "eyJ..." }</code></li>
+        <li>React receives token → localStorage → calls <code>GET /auth/me</code> → saves user to Context → navigates to dashboard</li>
+      </ol>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 2 — FOLDERS
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p2">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 2</span>
+        <span class="phase-title">Folder-by-Folder Breakdown</span>
+      </div>
+
+      <div class="note">
+        <span class="callout-icon">📁</span>
+        <div class="callout-body">
+          <strong>Design Pattern</strong>
+          <p>This project follows the <strong>MVC pattern</strong> (Model-View-Controller). Each folder has exactly one responsibility — this is called <strong>separation of concerns</strong>.</p>
+        </div>
+      </div>
+
+      <h2>Backend Folders (<code>server/</code>)</h2>
+      <table>
+        <thead><tr><th>Folder</th><th>Responsibility</th><th>If removed</th></tr></thead>
+        <tbody>
+          <tr><td><code>config/</code></td><td>Database connection logic</td><td>Server crashes — nothing connects to MongoDB</td></tr>
+          <tr><td><code>constants/</code></td><td>Single source of truth for values like APPLICATION_STATUS enum</td><td>Same strings repeated everywhere — one typo breaks everything</td></tr>
+          <tr><td><code>controllers/</code></td><td>Business logic — what happens when a route is hit</td><td>Routes would contain all logic — unreadable and untestable</td></tr>
+          <tr><td><code>middleware/</code></td><td>JWT verification, global error handling</td><td>Every route manually verifies tokens and handles errors</td></tr>
+          <tr><td><code>models/</code></td><td>MongoDB schemas — shape of data</td><td>No schema validation, no type enforcement, no query abstraction</td></tr>
+          <tr><td><code>routes/</code></td><td>URL-to-controller mapping only</td><td>Express has no idea which URL maps to which controller</td></tr>
+          <tr><td><code>services/</code></td><td>Reusable logic not tied to one route (email sending)</td><td>Email code duplicated in every controller that needs it</td></tr>
+          <tr><td><code>validators/</code></td><td>Zod schemas validate request body before controller runs</td><td>Bad data reaches controllers, potentially causing crashes or data corruption</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Frontend Folders (<code>client/src/</code>)</h2>
+      <table>
+        <thead><tr><th>Folder</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td><code>api/</code></td><td>Wrappers around axios calls — keeps HTTP logic out of components</td></tr>
+          <tr><td><code>components/</code></td><td>Reusable UI pieces used across multiple pages</td></tr>
+          <tr><td><code>contexts/</code></td><td>Global state (auth, toasts) accessible from any component</td></tr>
+          <tr><td><code>hooks/</code></td><td>Custom React hooks — reusable stateful logic</td></tr>
+          <tr><td><code>layouts/</code></td><td>Page shells (sidebar + header) that wrap page content</td></tr>
+          <tr><td><code>pages/</code></td><td>One file per route — composes components into full pages</td></tr>
+          <tr><td><code>routes/</code></td><td>Route definitions and route guards (ProtectedRoute, PublicRoute)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 3 — FILES
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p3">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 3</span>
+        <span class="phase-title">File-by-File Analysis</span>
+      </div>
+
+      <h2>server/server.js</h2>
+      <pre><code>import "dotenv/config";        // loads .env into process.env
+import app from "./app.js";    // configured Express app
+import connectDB from "./config/database.js";
+
+const PORT = process.env.PORT || 5000;
+// process.env.PORT = set by Render in production
+// || 5000 = fallback for local development
+
+const startServer = async () => {
+  await connectDB();   // wait for DB BEFORE starting server
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();</code></pre>
+
+      <div class="warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Common Interview Question</strong>
+          <p>Why <code>await connectDB()</code> before <code>app.listen()</code>? If you start the server before connecting to the database, it accepts requests but every database query fails. <code>await</code> ensures the DB is ready first.</p>
+        </div>
+      </div>
+
+      <h2>server/app.js — Middleware Chain</h2>
+      <p>This file wires together every piece of the backend. Every incoming request flows through this chain in order:</p>
+      <pre><code>Request arrives
+      ↓ Helmet        → adds ~14 security headers
+      ↓ CORS          → checks if origin is in whitelist
+      ↓ express.json  → parses body string → JS object
+      ↓ Rate Limiter  → checks request count per IP
+      ↓ Router        → matches URL + HTTP method
+      ↓ authMiddleware → verifies JWT (protected routes only)
+      ↓ Zod Validator → validates request body
+      ↓ Controller    → business logic, database queries
+      ↓ errorMiddleware → catches any error from above</code></pre>
+
+      <h2>server/controllers/authController.js</h2>
+      <h3>registerUser</h3>
+      <pre><code>const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+// SALT_ROUNDS = 10 → runs 2^10 = 1024 iterations
+// ~100ms per hash — too slow for brute force, fast enough for users
+
+sendEmail({ to: email, ...welcomeTemplate({ name }) }).catch(err =>
+  console.error("Welcome email failed:", err.message)
+);
+// .catch() not await = "fire and forget"
+// Registration succeeds even if email fails</code></pre>
+
+      <h3>loginUser — Security detail</h3>
+      <div class="important">
+        <span class="callout-icon">🔒</span>
+        <div class="callout-body">
+          <strong>User Enumeration Prevention</strong>
+          <p>Both wrong email AND wrong password return <em>exactly</em> the same message: "Invalid email or password." If you returned "Email not found", an attacker could check which emails are registered by using your login form.</p>
+        </div>
+      </div>
+
+      <h3>forgotPassword — Two Token Strategy</h3>
+      <pre><code>const rawToken    = crypto.randomBytes(32).toString("hex");
+const hashedToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+
+user.resetPasswordToken   = hashedToken;  // stored in DB
+user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hour
+
+// rawToken goes in the email URL — only user sees it
+// If DB is breached, attacker gets SHA-256 hashes — cannot reverse them</code></pre>
+
+      <div class="tip">
+        <span class="callout-icon">💜</span>
+        <div class="callout-body">
+          <strong>Token Rollback Pattern</strong>
+          <p>If the email send fails, we clear the token from the database. Without this, the user would have a token they never received — they can't reset their password AND can't request a new one because a token already exists.</p>
+        </div>
+      </div>
+
+      <h2>server/models/userModel.js</h2>
+      <pre><code>const userSchema = new mongoose.Schema({
+  name:     { type: String, required: true, trim: true },
+  email:    { type: String, required: true, unique: true, lowercase: true },
+  password: { type: String, required: true },
+  role:     { type: String, enum: ["user", "admin"], default: "user" },
+  resetPasswordToken:   { type: String },
+  resetPasswordExpires: { type: Date },
+}, { timestamps: true }); // auto-adds createdAt, updatedAt</code></pre>
+
+      <table>
+        <thead><tr><th>Option</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>trim: true</code></td><td>Strips leading/trailing whitespace before saving</td></tr>
+          <tr><td><code>lowercase: true</code></td><td>Converts to lowercase — "John@Gmail.com" == "john@gmail.com"</td></tr>
+          <tr><td><code>unique: true</code></td><td>Creates a database-level index — rejects duplicate emails</td></tr>
+          <tr><td><code>enum</code></td><td>Restricts to listed values — "superadmin" throws validation error</td></tr>
+          <tr><td><code>timestamps: true</code></td><td>Auto-adds createdAt and updatedAt to every document</td></tr>
+        </tbody>
+      </table>
+
+      <h2>server/middleware/authMiddleware.js</h2>
+      <pre><code>export const authenticateUser = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  // "Bearer eyJ..." → ["Bearer", "eyJ..."] → "eyJ..."
+
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  // Checks: 1) signature is valid, 2) token not expired
+  // Returns: { userId, role, iat, exp }
+
+  req.user = decoded;  // inject into request
+  next();              // proceed to controller
+};</code></pre>
+
+      <div class="note">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+          <strong>What is next()?</strong>
+          <p>Every Express middleware receives <code>(req, res, next)</code>. Calling <code>next()</code> tells Express to move to the next middleware or controller. NOT calling it means the request hangs forever.</p>
+        </div>
+      </div>
+
+      <h2>client/src/api/axiosInstance.js</h2>
+      <pre><code>const axiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 30000, // 30 second timeout — prevents hanging requests
+});
+
+axiosInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});</code></pre>
+
+      <div class="hint">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Why interceptors?</strong>
+          <p>Without the interceptor, every API call would need to manually add the Authorization header. The interceptor runs automatically before every request — one place to change, applies everywhere.</p>
+        </div>
+      </div>
+
+      <h2>client/src/contexts/AuthContext.jsx</h2>
+      <pre><code>const [loading, setLoading] = useState(true);
+// Starts as TRUE — prevents "flash of unauthenticated content"
+// A logged-in user refreshing the page would briefly see /login
+// without this loading check
+
+useEffect(() => {
+  const restoreSession = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) { setLoading(false); return; }
+
+    try {
+      const data = await getCurrentUser(); // verify token is still valid
+      setUser(data.data);
+    } catch {
+      logout(); // token expired — clean up localStorage
+    } finally {
+      setLoading(false);
+    }
+  };
+  restoreSession();
+}, []); // [] = run once on mount only</code></pre>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 4 — JAVASCRIPT CONCEPTS
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p4">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 4</span>
+        <span class="phase-title">JavaScript Concepts Used</span>
+      </div>
+
+      <h2>Async / Await and Promises</h2>
+      <p>JavaScript runs on a single thread. When you call a database or send an email, instead of blocking the thread, JS sends the request and moves on. When the response arrives, the Event Loop picks it up and resumes.</p>
+      <pre><code>// Promise chain (old way)
+User.findOne({ email })
+  .then(user => bcrypt.compare(password, user.password))
+  .then(isMatch => { if (!isMatch) return res.status(401)... })
+  .catch(error => next(error));
+
+// Async/await (modern, same thing, easier to read)
+const user    = await User.findOne({ email });
+const isMatch = await bcrypt.compare(password, user.password);
+if (!isMatch) return res.status(401)...;</code></pre>
+
+      <div class="note">
+        <span class="callout-icon">ℹ️</span>
+        <div class="callout-body">
+          <strong>Event Loop Analogy</strong>
+          <p>Think of a restaurant. The waiter (JS thread) takes your order (request) and gives it to the kitchen (database). The waiter doesn't stand there waiting — they go take other orders. When the kitchen is done, they call out "order up!" (callback) and the waiter delivers it.</p>
+        </div>
+      </div>
+
+      <h2>Destructuring</h2>
+      <pre><code>const { name, email, password } = req.body;
+// Instead of:  const name = req.body.name; const email = req.body.email;
+
+const [user, token] = await Promise.all([...]);
+// Array destructuring</code></pre>
+
+      <h2>Spread Operator</h2>
+      <pre><code>sendEmail({ to: email, ...welcomeTemplate({ name }) });
+// welcomeTemplate returns { subject: "...", html: "..." }
+// Spread merges: { to: email, subject: "...", html: "..." }
+
+const filteredList = [...applications]; // copy array before sorting
+// sort() mutates — never sort React state directly</code></pre>
+
+      <h2>Optional Chaining (<code>?.</code>)</h2>
+      <pre><code>a.companyName?.toLowerCase()
+// If companyName is null/undefined → returns undefined
+// Without ?.  → throws TypeError: Cannot read property 'toLowerCase' of undefined</code></pre>
+
+      <h2>ES Modules</h2>
+      <pre><code>// Named export — can have many per file
+export const registerUser = async (req, res, next) => { ... };
+
+// Default export — one per file
+export default router;
+
+// Import
+import { registerUser } from "./authController.js";
+import router from "./authRoutes.js";</code></pre>
+
+      <h2>Closures</h2>
+      <pre><code>const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+});
+// rateLimit() returns a FUNCTION (middleware)
+// That function "closes over" (remembers) windowMs and max
+// Even after rateLimit() has returned and is off the call stack
+// This is a closure: inner function accessing outer function's variables</code></pre>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 5 — REACT CONCEPTS
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p5">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 5</span>
+        <span class="phase-title">React Concepts Used</span>
+      </div>
+
+      <h2>Component Lifecycle with Hooks</h2>
+      <table>
+        <thead><tr><th>Lifecycle Event</th><th>Hook</th><th>Used in HireFlow for</th></tr></thead>
+        <tbody>
+          <tr><td>Mount (run once)</td><td><code>useEffect(() =&gt; {}, [])</code></td><td>Fetching applications on page load</td></tr>
+          <tr><td>Update (run on change)</td><td><code>useEffect(() =&gt; {}, [dep])</code></td><td>Re-fetching when filters change</td></tr>
+          <tr><td>Unmount (cleanup)</td><td><code>useEffect(() =&gt; { return () =&gt; cleanup() }, [])</code></td><td>Clearing timers in ForgotPasswordPage</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Virtual DOM</h2>
+      <p>React maintains a lightweight JavaScript copy of the real DOM. When state changes:</p>
+      <ol>
+        <li>Creates a new Virtual DOM tree</li>
+        <li>Diffs it against the previous Virtual DOM (reconciliation)</li>
+        <li>Only updates the real DOM nodes that actually changed</li>
+      </ol>
+      <p>This is far faster than rebuilding the entire DOM on every state change.</p>
+
+      <h2>useMemo — Performance Optimisation</h2>
+      <pre><code>const filtered = useMemo(() => {
+  // filtering + sorting is O(n log n) — costs CPU
+  return applications.filter(...).sort(...);
+}, [applications, searchQuery, statusFilter, sortBy]);
+// Only recalculates when these 4 values change
+// Without useMemo: recalculates on EVERY render (e.g. typing in a search box)</code></pre>
+
+      <div class="warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Never Mutate State</strong>
+          <p><code>Array.sort()</code> mutates the original array. We always do <code>[...applications].sort()</code> — the spread creates a copy. Mutating React state directly causes subtle bugs and breaks React's change detection.</p>
+        </div>
+      </div>
+
+      <h2>Context API — Avoiding Prop Drilling</h2>
+      <pre><code>// Without Context (prop drilling — bad)
+&lt;App user={user}&gt;
+  &lt;Layout user={user}&gt;
+    &lt;Header user={user}&gt;  ← 3 levels deep, every component needs user
+      &lt;Avatar user={user} /&gt;
+    &lt;/Header&gt;
+  &lt;/Layout&gt;
+&lt;/App&gt;
+
+// With Context (clean)
+&lt;AuthProvider&gt;   ← stores user here
+  &lt;Header /&gt;     ← calls useAuth() directly, no props needed
+    &lt;Avatar /&gt;   ← calls useAuth() directly
+&lt;/AuthProvider&gt;</code></pre>
+
+      <h2>Protected Routes Pattern</h2>
+      <pre><code>const ProtectedRoute = () => {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return &lt;Skeleton /&gt;;           // still checking token
+  return isAuthenticated
+    ? &lt;Outlet /&gt;                               // render the page
+    : &lt;Navigate to="/login" /&gt;;               // redirect to login
+};
+
+const PublicRoute = () => {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) return &lt;Skeleton /&gt;;
+  return !isAuthenticated
+    ? &lt;Outlet /&gt;                               // show login/register
+    : &lt;Navigate to="/dashboard" /&gt;;           // already logged in</code></pre>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 6 — BACKEND CONCEPTS
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p6">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 6</span>
+        <span class="phase-title">Backend Concepts</span>
+      </div>
+
+      <h2>JWT Structure — Detailed</h2>
+      <p>A JWT has three base64-encoded parts separated by dots:</p>
+      <pre><code>eyJhbGciOiJIUzI1NiJ9  .  eyJ1c2VySWQiOiIxMjMifQ  .  abc123signature
+      HEADER                       PAYLOAD                   SIGNATURE</code></pre>
+
+      <table>
+        <thead><tr><th>Part</th><th>Contains</th><th>Verifiable?</th></tr></thead>
+        <tbody>
+          <tr><td>Header</td><td><code>{ "alg": "HS256", "typ": "JWT" }</code></td><td>Yes — part of signature</td></tr>
+          <tr><td>Payload</td><td><code>{ userId, role, iat, exp }</code></td><td>Yes — part of signature</td></tr>
+          <tr><td>Signature</td><td><code>HMAC-SHA256(header+payload, JWT_SECRET)</code></td><td>N/A — is the verifier</td></tr>
+        </tbody>
+      </table>
+
+      <div class="important">
+        <span class="callout-icon">🔑</span>
+        <div class="callout-body">
+          <strong>Why can't you tamper with the payload?</strong>
+          <p>If you change the payload, the signature no longer matches. <code>jwt.verify()</code> recalculates the signature using <code>JWT_SECRET</code> and detects the mismatch. Without knowing the secret, you cannot generate a valid signature.</p>
+        </div>
+      </div>
+
+      <h2>REST Principles — How We Follow Them</h2>
+      <table>
+        <thead><tr><th>Principle</th><th>Our Implementation</th></tr></thead>
+        <tbody>
+          <tr><td>Correct HTTP methods</td><td>GET=read, POST=create, PATCH=partial update, DELETE=delete</td></tr>
+          <tr><td>Nouns in URLs, not verbs</td><td><code>/applications</code> not <code>/getApplications</code></td></tr>
+          <tr><td>Stateless</td><td>JWT in every request — server stores nothing per session</td></tr>
+          <tr><td>Correct status codes</td><td>201 Created, 401 Unauthorized, 409 Conflict, 429 Too Many Requests</td></tr>
+          <tr><td>Resource-based</td><td><code>/applications/:id</code> represents one specific application</td></tr>
+        </tbody>
+      </table>
+
+      <h2>bcrypt — How Password Hashing Works</h2>
+      <pre><code>// Registration
+const hash = await bcrypt.hash("mypassword", 10);
+// → "$2b$10$N9qo8uLOickgx2ZMRZoMye..."
+// The hash INCLUDES the salt and cost factor
+
+// Login
+const isMatch = await bcrypt.compare("mypassword", storedHash);
+// bcrypt extracts the salt from the hash, re-hashes the input,
+// compares the result. No need to store the salt separately.</code></pre>
+
+      <div class="hint">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Why bcrypt over SHA-256 for passwords?</strong>
+          <p>SHA-256 is fast — a modern GPU can try billions of hashes per second. bcrypt with 10 rounds takes ~100ms per hash. An attacker can only try ~10 passwords/second instead of billions. This makes brute force attacks impractical even with a leaked database.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 7 — MONGODB
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p7">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 7</span>
+        <span class="phase-title">MongoDB Deep Dive</span>
+      </div>
+
+      <h2>Schema vs Model</h2>
+      <pre><code>// Schema — blueprint, just a definition
+const userSchema = new mongoose.Schema({ name: String, email: String });
+
+// Model — the class you query with
+const User = mongoose.model("User", userSchema);
+
+// Usage
+const user    = await User.findOne({ email: "test@test.com" });  // read
+const newUser = await User.create({ name: "John", email: "j@test.com" }); // create</code></pre>
+
+      <h2>All Queries Used in HireFlow</h2>
+      <pre><code>User.findOne({ email })                    // find one by condition
+User.findById(userId)                        // find by _id
+User.findByIdAndUpdate(id, data, {
+  new: true,          // return document AFTER update
+  runValidators: true // enforce schema validation on update
+})
+
+Application.find({ user: userId })          // find ALL matching
+  .sort({ createdAt: -1 })                  // newest first
+
+Application.findOneAndDelete({ _id: id, user: userId })  // ownership-enforced delete</code></pre>
+
+      <h2>Ownership-Enforced Queries — Critical Security</h2>
+      <pre><code>// WRONG — security hole
+Application.findById(id)
+// User A could delete User B's application if they know the _id
+
+// CORRECT — ownership enforced at database level
+Application.findOneAndDelete({ _id: id, user: req.user.userId })
+// Returns null if _id belongs to a different user
+// Attacker gets 404, not unauthorised access</code></pre>
+
+      <div class="important">
+        <span class="callout-icon">🔒</span>
+        <div class="callout-body">
+          <strong>Always enforce ownership in every query</strong>
+          <p>Every application controller query includes <code>{ user: req.user.userId }</code>. This is a critical security pattern. Without it, any user who knows an ObjectId can read, modify, or delete another user's data.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 8 — SECURITY
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p8">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 8</span>
+        <span class="phase-title">Security Review</span>
+      </div>
+
+      <h2>Security Implemented</h2>
+      <table>
+        <thead><tr><th>Threat</th><th>Our Defence</th></tr></thead>
+        <tbody>
+          <tr><td>Brute force login</td><td>Rate limiter: 20 req/15min per IP</td></tr>
+          <tr><td>NoSQL injection</td><td>Mongoose parameterised queries — never string concatenation</td></tr>
+          <tr><td>XSS</td><td>Helmet headers + React escapes JSX output by default</td></tr>
+          <tr><td>Password theft via DB breach</td><td>bcrypt hashing — never store plaintext</td></tr>
+          <tr><td>Reset token theft via DB breach</td><td>SHA-256 hash stored, not the raw token</td></tr>
+          <tr><td>Token expiry</td><td>JWT expires 7 days, reset tokens expire 1 hour</td></tr>
+          <tr><td>CORS attacks</td><td>Whitelist of allowed origins</td></tr>
+          <tr><td>Clickjacking</td><td>Helmet sets X-Frame-Options: SAMEORIGIN</td></tr>
+          <tr><td>Large payload attacks</td><td><code>express.json({ limit: "10kb" })</code></td></tr>
+          <tr><td>User enumeration</td><td>Same response for existing and non-existing emails</td></tr>
+          <tr><td>Credential exposure</td><td>.env in .gitignore — never committed to git</td></tr>
+          <tr><td>Unauthorised data access</td><td>Every query includes <code>user: userId</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2>Remaining Vulnerabilities — Honest Assessment</h2>
+      <div class="warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>JWT in localStorage (Medium Risk)</strong>
+          <p>localStorage is accessible by JavaScript. An XSS attack could steal the token. Better: HttpOnly cookies (JavaScript can't read them). Trade-off: requires more complex CORS setup with <code>credentials: true</code>.</p>
+        </div>
+      </div>
+      <div class="warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>No Email Verification (Low-Medium Risk)</strong>
+          <p>Users can register with any email they don't own. Fix: send verification email on register, require verification before allowing login.</p>
+        </div>
+      </div>
+      <div class="warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>No JWT Blacklist (Low Risk)</strong>
+          <p>Once issued, a JWT is valid until expiry. You cannot immediately invalidate it. Fix: maintain a token blacklist in Redis, or use short-lived tokens (15min) + refresh tokens.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 9 — PERFORMANCE
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p9">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 9</span>
+        <span class="phase-title">Performance Review</span>
+      </div>
+
+      <h2>Frontend</h2>
+      <p><strong>Bundle size: 847KB (244KB gzipped)</strong> — larger than ideal. Main culprit: Recharts. Fix with dynamic imports:</p>
+      <pre><code>const AnalyticsPage = React.lazy(() =>
+  import('./pages/dashboard/AnalyticsPage')
+);
+// Recharts only downloads when user visits Analytics page
+// Initial load becomes much smaller</code></pre>
+
+      <h2>Backend</h2>
+      <p><strong>Missing database index</strong> — the <code>user</code> field in applications has no index. Without it, finding a user's applications requires scanning ALL application documents.</p>
+      <pre><code>// Add this to applicationModel.js
+applicationSchema.index({ user: 1, createdAt: -1 });
+// Now queries by user + sorted by date are O(log n) instead of O(n)</code></pre>
+
+      <h2>Caching Opportunity</h2>
+      <p>Every dashboard load hits MongoDB. With Redis, you could cache each user's application list for 60 seconds. Most users don't add applications that frequently. This would reduce database load by ~80%.</p>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 10 — SYSTEM DESIGN
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p10">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 10</span>
+        <span class="phase-title">System Design &amp; Scalability</span>
+      </div>
+
+      <h2>Current Architecture (10–100 users)</h2>
+      <pre><code>Browser → Vercel CDN → Render (single Node) → MongoDB Atlas</code></pre>
+      <p>Works perfectly. No changes needed.</p>
+
+      <h2>1,000 Users</h2>
+      <p>Same architecture. Add UptimeRobot to prevent Render cold starts. Monitor response times.</p>
+
+      <h2>10,000 Users</h2>
+      <pre><code>Browser → Vercel → Load Balancer → 2-3 Node instances
+                                    ↓
+                               MongoDB Atlas (M10)
+                               Redis (application list cache)</code></pre>
+      <p>JWT is stateless — any server can handle any request without shared session state. This is a key advantage of JWT over sessions.</p>
+
+      <h2>100,000 Users</h2>
+      <pre><code>Browser → CloudFront CDN → ALB → Auto Scaling Group (Node)
+                                    ↓           ↓
+                               MongoDB Atlas   Redis Cluster
+                               (M30 replica)   (caching)
+                                    ↓
+                               SQS Queue → Email Workers
+                               (async email — don't block requests)</code></pre>
+
+      <h2>1,000,000 Users</h2>
+      <pre><code>Browser → CDN → API Gateway → Microservices:
+  ├── Auth Service
+  ├── Applications Service
+  ├── Email Service
+  ├── Analytics Service (Python for data)
+  ↓
+MongoDB (sharded) + Elasticsearch (search)
+Redis Cluster + Kafka (event streaming)
+Multi-region deployment</code></pre>
+
+      <div class="tip">
+        <span class="callout-icon">💜</span>
+        <div class="callout-body">
+          <strong>Interview Tip — When to microservices</strong>
+          <p>The current monolith is appropriate for current scale. Premature microservices add operational complexity (service discovery, distributed tracing, network latency) without benefit. Move to microservices when a specific service has performance bottlenecks that can't be solved by scaling the monolith.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 11 — INTERVIEW Q&A
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p11">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 11</span>
+        <span class="phase-title">Interview Questions with Answers</span>
+      </div>
+
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-text">Beginner</div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <span class="difficulty diff-beginner">● Beginner</span>
+      <div class="qa-block">
+        <div class="qa-q">What is HireFlow and what problem does it solve?</div>
+        <div class="qa-a">HireFlow is a full-stack job application tracking SaaS. It solves the problem of job seekers using messy spreadsheets. Users register, log in, and track applications through a pipeline: Applied → Interview → Offer → Rejected. It has real charts from live data, search/filter/sort, CSV export, and a complete email-based password reset flow. Built with React + Node.js + MongoDB, deployed on Vercel and Render.</div>
+      </div>
+
+      <span class="difficulty diff-beginner">● Beginner</span>
+      <div class="qa-block">
+        <div class="qa-q">What is the difference between frontend and backend?</div>
+        <div class="qa-a">The frontend is the React app — what users see in their browser. The backend is the Express server — it handles authentication, stores data in MongoDB, and sends emails. They communicate via HTTP: the frontend sends JSON requests, the backend processes them and returns JSON responses.</div>
+      </div>
+
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-text">Intermediate</div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <span class="difficulty diff-intermediate">● Intermediate</span>
+      <div class="qa-block">
+        <div class="qa-q">Why MongoDB over PostgreSQL?</div>
+        <div class="qa-a">MongoDB's document model fits job applications — they have variable fields (some have salary, some don't; some have work type, some don't). In PostgreSQL you'd need nullable columns or multiple tables. MongoDB lets each document have different fields naturally. MongoDB Atlas also has a generous free tier. That said, for complex reporting or strict relational data, PostgreSQL would be the better choice — it's a valid trade-off discussion.</div>
+      </div>
+
+      <span class="difficulty diff-intermediate">● Intermediate</span>
+      <div class="qa-block">
+        <div class="qa-q">How does the password reset flow work?</div>
+        <div class="qa-a">We generate a cryptographically random 32-byte token using Node's crypto.randomBytes(). We SHA-256 hash it and store the hash in the database with a 1-hour expiry. We email the RAW token in the reset URL. When the user clicks the link, we SHA-256 hash the URL token and compare to the stored hash. If they match and expiry hasn't passed, we allow the password change and clear the token. Storing the hash means a database breach doesn't expose usable tokens.</div>
+      </div>
+
+      <span class="difficulty diff-intermediate">● Intermediate</span>
+      <div class="qa-block">
+        <div class="qa-q">How does CORS work in this project?</div>
+        <div class="qa-a">CORS is a browser security policy blocking requests between different origins. Our React app (vercel.app) calls our API (onrender.com) — different origins. The browser sends a preflight OPTIONS request. Our CORS middleware checks if the request origin is in our whitelist (production URL + a regex matching any hireflow*.vercel.app preview deployment). If allowed, it adds the Access-Control-Allow-Origin header and the browser proceeds.</div>
+      </div>
+
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-text">Advanced</div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <span class="difficulty diff-advanced">● Advanced</span>
+      <div class="qa-block">
+        <div class="qa-q">What is the security vulnerability of JWT in localStorage?</div>
+        <div class="qa-a">localStorage is accessible to any JavaScript on the page. If the site has an XSS vulnerability — malicious script injected into the page — that script can call localStorage.getItem("token") and steal the JWT. With a stolen JWT, an attacker impersonates the user until expiry. The secure alternative is HttpOnly cookies: JavaScript cannot access them at all, so XSS can't steal the token. The trade-off is added complexity: CORS must be configured with credentials:true, and CSRF protection becomes necessary (mitigated by SameSite cookie attribute).</div>
+      </div>
+
+      <span class="difficulty diff-advanced">● Advanced</span>
+      <div class="qa-block">
+        <div class="qa-q">Explain the N+1 query problem. Does your project have it?</div>
+        <div class="qa-a">The N+1 problem: you make 1 query to get a list, then N separate queries to get details for each item — total N+1 queries. Example: fetch 50 applications then make 50 separate User queries to get each owner's name. My project doesn't have this because applications embed all needed data in one document. If I added a feature showing user avatar per application via a separate User query, that would be N+1 — fixed by Mongoose .populate() which does a single JOIN-equivalent query.</div>
+      </div>
+
+      <div class="section-divider">
+        <div class="section-divider-line"></div>
+        <div class="section-divider-text">Senior</div>
+        <div class="section-divider-line"></div>
+      </div>
+
+      <span class="difficulty diff-senior">● Senior</span>
+      <div class="qa-block">
+        <div class="qa-q">How would you scale HireFlow to 1 million users?</div>
+        <div class="qa-a">Move to microservices: Auth, Applications, Email, Analytics services — each scales independently. MongoDB needs sharding — partition data across servers by user ID so no single server holds all data. Add Elasticsearch for full-text search across millions of applications. Redis cluster for distributed caching. Kafka for async event processing — status changes trigger emails and notifications without blocking the request. API Gateway handles rate limiting, auth, and routing. Multi-region deployment for global latency. The current monolith is correct for current scale — premature microservices add complexity without benefit.</div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 12 — PROJECT DEFENSE
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p12">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 12</span>
+        <span class="phase-title">Project Defense</span>
+      </div>
+
+      <div class="note">
+        <span class="callout-icon">🎯</span>
+        <div class="callout-body">
+          <strong>How to use this section</strong>
+          <p>Interviewers challenge your decisions to test whether you understand trade-offs or just copied a tutorial. Every answer below acknowledges the alternative, explains the trade-off, and justifies the choice made.</p>
+        </div>
+      </div>
+
+      <h2>Why React instead of Vue or Angular?</h2>
+      <p>React has the largest ecosystem and job market demand — the right choice for a portfolio project. Vue is excellent but smaller ecosystem. Angular is opinionated and complex — overkill for this scale. React's component model maps naturally to the UI: StatsCard, ApplicationTable, Modal are all independent reusable components.</p>
+
+      <h2>Why Express instead of Fastify or NestJS?</h2>
+      <p>Express has 20+ years of battle-tested stability and the largest middleware ecosystem. Fastify is ~10% faster but speed is not our bottleneck — database queries are. NestJS is excellent for teams but introduces complexity (decorators, modules, dependency injection) that slows down a solo developer. Express lets you move fast.</p>
+
+      <h2>Why JWT instead of sessions?</h2>
+      <p>Sessions store state on the server (memory or Redis). JWT is stateless — the server stores nothing per session. With multiple server instances, sessions need a shared Redis store. JWT works identically across any number of servers because the token is self-contained. Trade-off: you cannot immediately invalidate a JWT without a blacklist. Sessions can be deleted instantly. For this scale, JWT's simplicity wins.</p>
+
+      <h2>Why not Redux?</h2>
+      <p>Redux adds significant boilerplate and mental overhead. It's appropriate when state is deeply nested, actions need to be trackable/undoable, or multiple unrelated parts of the app need the same state. HireFlow's state is: auth state (one Context) and page-level state (local useState). Redux would be over-engineering. React Context and local state are sufficient and far simpler.</p>
+
+      <h2>Why not Next.js?</h2>
+      <p>Next.js is a full-stack React framework with server-side rendering. Excellent for SEO-critical public pages. HireFlow's dashboard pages are behind authentication — they don't need SEO. Next.js would also require merging the frontend and backend into one codebase, which is a larger architectural change than the benefit justifies. The current separation is cleaner and more scalable.</p>
+
+      <h2>Why not PostgreSQL?</h2>
+      <p>Job application data has variable fields — not all applications have salary, work type, or follow-up dates. MongoDB's document model handles optional fields naturally without nullable columns. That said, PostgreSQL would be equally valid. For complex reporting, strict relational integrity, or multi-table transactions, PostgreSQL is the better choice. MongoDB was chosen for its free Atlas tier and flexible schema during rapid development.</p>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PHASE 13 — RESUME PREPARATION
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p13">
+      <div class="phase-header">
+        <span class="phase-badge">Phase 13</span>
+        <span class="phase-title">Resume Preparation</span>
+      </div>
+
+      <h2>"Tell me about your project."</h2>
+      <div class="qa-block">
+        <div class="qa-q">Describe HireFlow in 60 seconds</div>
+        <div class="qa-a">I built HireFlow — a full-stack SaaS job application tracker. The problem: job seekers track applications in spreadsheets, lose track of where they applied, and have no insight into their job search. HireFlow gives them a dashboard to track every application, visualise their pipeline with charts, and manage the entire job search in one place. Technically: React frontend on Vercel, Node.js/Express API on Render, MongoDB Atlas for the database, and Nodemailer for email. I implemented JWT authentication with a complete password reset flow using cryptographic tokens, rate limiting, security headers, real-time search and filtering using useMemo, bulk actions, CSV export, and Recharts analytics. Live at hireflow.vercel.app.</div>
+      </div>
+
+      <h2>"What was your biggest technical challenge?"</h2>
+      <div class="qa-block">
+        <div class="qa-q">Biggest challenge</div>
+        <div class="qa-a">The biggest challenge was a field name mismatch. The frontend was sending "company" and "role" but the backend model expected "companyName" and "jobRole". Every create and update operation was silently failing because Zod validation rejected the request body — but the response still said "success" due to a design issue in the controller. It took careful debugging — reading both the model schema and the form submission simultaneously — to spot it. After fixing it, I realised the importance of an API contract document to keep frontend and backend field names in sync from the start.</div>
+      </div>
+
+      <h2>"What would you improve?"</h2>
+      <div class="qa-block">
+        <div class="qa-q">What improvements would you make?</div>
+        <div class="qa-a">Three things in priority order. First: move JWT from localStorage to HttpOnly cookies — more secure against XSS attacks. Second: add a compound database index on application.user and application.createdAt — right now queries scan all documents without it. Third: add email verification on registration — currently users can register with any email address they don't own, which is a security gap.</div>
+      </div>
+
+      <h2>"Describe your authentication flow."</h2>
+      <div class="qa-block">
+        <div class="qa-q">Walk me through authentication</div>
+        <div class="qa-a">User registers → bcrypt hashes their password with 10 salt rounds → stored in MongoDB. On login, we find the user by email, call bcrypt.compare() to verify the password without ever decrypting it, then sign a JWT containing userId and role — expires in 7 days. Frontend stores the token in localStorage. An Axios interceptor reads it before every request and adds Authorization: Bearer token to the header. On the backend, authenticateUser middleware calls jwt.verify() — checks the signature and expiry — then injects the decoded user into req.user so any controller can read req.user.userId without another database query.</div>
+      </div>
+
+      <h2>"Tell me about deployment."</h2>
+      <div class="qa-block">
+        <div class="qa-q">How is the project deployed?</div>
+        <div class="qa-a">Frontend is on Vercel — auto-detects Vite, builds in under 10 seconds, CDN serves it globally. Backend is on Render free tier — auto-deploys on every git push via GitHub integration. MongoDB is on Atlas free tier. The main challenge with Render free tier is it sleeps after 15 minutes of inactivity. I solved it with UptimeRobot — pings the /api/health endpoint every 5 minutes to keep the server warm. The frontend also has cold-start UX: after 8 seconds of waiting it shows "Server is waking up" instead of just spinning silently forever.</div>
+      </div>
+    </div>
+
+    <hr/>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         KEY NUMBERS
+    ════════════════════════════════════════════════════════════════════ -->
+    <div class="phase" id="p14">
+      <div class="phase-header">
+        <span class="phase-badge">★ Reference</span>
+        <span class="phase-title">Key Numbers — Memorise These</span>
+      </div>
+
+      <div class="key-numbers">
+        <div class="kn-card"><div class="kn-value">7d</div><div class="kn-label">JWT Expiry</div></div>
+        <div class="kn-card"><div class="kn-value">1hr</div><div class="kn-label">Reset Token Expiry</div></div>
+        <div class="kn-card"><div class="kn-value">10</div><div class="kn-label">bcrypt Salt Rounds</div></div>
+        <div class="kn-card"><div class="kn-value">20</div><div class="kn-label">Auth Rate Limit (15 min)</div></div>
+        <div class="kn-card"><div class="kn-value">200</div><div class="kn-label">API Rate Limit (15 min)</div></div>
+        <div class="kn-card"><div class="kn-value">10KB</div><div class="kn-label">Max Request Body</div></div>
+        <div class="kn-card"><div class="kn-value">30s</div><div class="kn-label">Axios Timeout</div></div>
+        <div class="kn-card"><div class="kn-value">12</div><div class="kn-label">API Endpoints</div></div>
+        <div class="kn-card"><div class="kn-value">5min</div><div class="kn-label">UptimeRobot Interval</div></div>
+      </div>
+
+      <h2>API Endpoints Quick Reference</h2>
+      <table>
+        <thead><tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>POST</td><td>/api/auth/register</td><td>No</td><td>Create account, sends welcome email</td></tr>
+          <tr><td>POST</td><td>/api/auth/login</td><td>No</td><td>Returns JWT token</td></tr>
+          <tr><td>GET</td><td>/api/auth/me</td><td>Yes</td><td>Get current user data</td></tr>
+          <tr><td>PATCH</td><td>/api/auth/me</td><td>Yes</td><td>Update display name</td></tr>
+          <tr><td>POST</td><td>/api/auth/forgot-password</td><td>No</td><td>Send reset link to email</td></tr>
+          <tr><td>POST</td><td>/api/auth/reset-password/:token</td><td>No</td><td>Set new password via token</td></tr>
+          <tr><td>POST</td><td>/api/auth/change-password</td><td>Yes</td><td>Change password (requires current)</td></tr>
+          <tr><td>GET</td><td>/api/applications</td><td>Yes</td><td>Get all user's applications</td></tr>
+          <tr><td>POST</td><td>/api/applications</td><td>Yes</td><td>Create application</td></tr>
+          <tr><td>GET</td><td>/api/applications/:id</td><td>Yes</td><td>Get single application</td></tr>
+          <tr><td>PATCH</td><td>/api/applications/:id</td><td>Yes</td><td>Update application</td></tr>
+          <tr><td>DELETE</td><td>/api/applications/:id</td><td>Yes</td><td>Delete application</td></tr>
+          <tr><td>GET</td><td>/api/health</td><td>No</td><td>Health check for UptimeRobot</td></tr>
+        </tbody>
+      </table>
+
+      <div class="tip">
+        <span class="callout-icon">⭐</span>
+        <div class="callout-body">
+          <strong>Final Reminder</strong>
+          <p>You built this project. You understand every decision, every trade-off, and every line of code. In any interview, speak with confidence. If you don't know an answer, say: <em>"That's a great point — in the current implementation I did X, but a better approach would be Y because Z."</em> Honest self-awareness about limitations is a senior engineer trait.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /page -->
+</body>
+</html>

@@ -193,3 +193,112 @@ export const welcomeTemplate = ({ name }) => ({
     </div>
   `),
 });
+
+// ─── Interview Reminder template ──────────────────────────────────────────
+export const interviewReminderTemplate = ({
+  name,
+  companyName,
+  jobRole,
+  interviewDateFormatted,
+  timeframeText, // "in 24 hours" or "in 1 hour"
+}) => {
+  const isOneHour = timeframeText.includes("1 hour");
+  const badgeColor = isOneHour ? "#f59e0b" : "#818cf8";
+  const badgeBg = isOneHour ? "rgba(245, 158, 11, 0.12)" : "rgba(129, 140, 248, 0.12)";
+  const badgeBorder = isOneHour ? "rgba(245, 158, 11, 0.3)" : "rgba(129, 140, 248, 0.3)";
+
+  return {
+    subject: `Interview Reminder: ${jobRole} at ${companyName} (${timeframeText})`,
+    html: layout(`
+      <!-- Icon -->
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="
+          display:inline-flex;align-items:center;justify-content:center;
+          width:64px;height:64px;border-radius:18px;
+          background:${badgeBg};
+          border:1px solid ${badgeBorder};
+          font-size:30px;
+        ">🎯</div>
+      </div>
+
+      <!-- Timeframe Pill -->
+      <div style="text-align:center;margin-bottom:14px;">
+        <span style="
+          display:inline-block;
+          font-size:12px;
+          font-weight:700;
+          text-transform:uppercase;
+          letter-spacing:0.06em;
+          color:${badgeColor};
+          background:${badgeBg};
+          border:1px solid ${badgeBorder};
+          padding:5px 14px;
+          border-radius:20px;
+        ">
+          ⏰ Interview ${timeframeText}
+        </span>
+      </div>
+
+      <!-- Heading -->
+      <h1 style="font-size:22px;font-weight:700;color:#ffffff;text-align:center;
+        margin-bottom:12px;letter-spacing:-0.5px;">
+        Get ready, ${name || "there"}!
+      </h1>
+
+      <p style="font-size:15px;color:#a1a1aa;text-align:center;line-height:1.6;margin-bottom:28px;">
+        Your upcoming interview for <strong style="color:#ffffff;">${jobRole}</strong> at <strong style="color:#ffffff;">${companyName}</strong> is scheduled for:
+      </p>
+
+      <!-- Interview Card -->
+      <div style="
+        background:rgba(255,255,255,0.03);
+        border:1px solid rgba(255,255,255,0.08);
+        border-radius:14px;
+        padding:20px 24px;
+        margin-bottom:28px;
+        text-align:center;
+      ">
+        <p style="font-size:12px;text-transform:uppercase;letter-spacing:0.05em;color:#71717a;margin-bottom:6px;">Scheduled Time</p>
+        <p style="font-size:18px;font-weight:700;color:#ffffff;margin-bottom:0;">
+          📅 ${interviewDateFormatted}
+        </p>
+      </div>
+
+      <!-- CTA Button -->
+      <div style="text-align:center;margin-bottom:28px;">
+        <a href="${process.env.CLIENT_URL || "http://localhost:5173"}/dashboard"
+          style="
+            display:inline-block;
+            background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#ffffff;
+            font-size:15px;
+            font-weight:600;
+            padding:14px 36px;
+            border-radius:12px;
+            text-decoration:none;
+          ">
+          View in Dashboard
+        </a>
+      </div>
+
+      <!-- Checklist -->
+      <div style="
+        background:rgba(99,102,241,0.05);
+        border:1px solid rgba(99,102,241,0.12);
+        border-radius:12px;
+        padding:18px 20px;
+      ">
+        <p style="font-size:13px;font-weight:600;color:#818cf8;margin-bottom:8px;">
+          Quick Interview Checklist:
+        </p>
+        <ul style="font-size:13px;color:#a1a1aa;line-height:1.9;padding-left:16px;margin:0;">
+          <li>Review the job description & your resume</li>
+          <li>Prepare questions to ask the interviewer</li>
+          <li>Test your microphone, camera & internet connection</li>
+          <li>Have a quiet space ready 10 minutes prior</li>
+        </ul>
+      </div>
+    `),
+  };
+};
+

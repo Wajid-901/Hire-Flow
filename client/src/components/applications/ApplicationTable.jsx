@@ -114,6 +114,11 @@ const ApplicationTable = ({
                   {app.priority}
                 </span>
               )}
+              {app.interviewDate && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-xs font-medium text-purple-300 bg-purple-500/10 border-purple-500/20">
+                  📅 {new Date(app.interviewDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })} {new Date(app.interviewDate).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                </span>
+              )}
             </div>
 
             {/* Actions row */}
@@ -227,7 +232,16 @@ const ApplicationTable = ({
                       </span>
                     )}
                   </td>
-                  <td className="px-5 py-4"><StatusBadge status={app.status} /></td>
+                  <td className="px-5 py-4">
+                    <div className="flex flex-col items-start gap-1">
+                      <StatusBadge status={app.status} />
+                      {app.interviewDate && (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium text-purple-300 bg-purple-500/10 border border-purple-500/20 whitespace-nowrap">
+                          📅 {new Date(app.interviewDate).toLocaleDateString("en-US", { month: "short", day: "numeric" })} {new Date(app.interviewDate).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}
+                        </span>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center justify-end gap-1">
                       <button type="button" onClick={() => window.open(app.jobLink, "_blank")} disabled={!app.jobLink} title="View listing"

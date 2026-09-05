@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { BsPlus, BsFilter, BsSearch, BsX, BsDownload, BsTrash } from "react-icons/bs";
 import ApplicationTable from "../../components/applications/ApplicationTable";
 import PageContainer from "../../components/layout/PageContainer";
@@ -12,6 +13,7 @@ import {
 
 const ApplicationsPage = () => {
   const toast = useToast();
+  const [searchParams]                              = useSearchParams();
   const [applications, setApplications]             = useState([]);
   const [loading, setLoading]                       = useState(true);
   const [isModalOpen, setIsModalOpen]               = useState(false);
@@ -19,13 +21,18 @@ const ApplicationsPage = () => {
   const [error, setError]                           = useState("");
 
   // Search / filter / sort
-  const [searchQuery, setSearchQuery]           = useState("");
+  const [searchQuery, setSearchQuery]           = useState(searchParams.get("search") || "");
   const [statusFilter, setStatusFilter]         = useState("all");
   const [sortBy, setSortBy]                     = useState("newest");
   const [showFilters, setShowFilters]           = useState(false);
   const [selectedApplications, setSelectedApplications] = useState([]);
-  const [pendingDeleteId, setPendingDeleteId]         = useState(null); // BUG-12: inline confirm instead of window.confirm
+  const [pendingDeleteId, setPendingDeleteId]         = useState(null);
   const [pendingBulkDelete, setPendingBulkDelete]     = useState(false);
+
+  useEffect(() => {
+    const q = searchParams.get("search");
+    if (q !== null) setSearchQuery(q);
+  }, [searchParams]);
 
   // BUG-08: declare fetchApplications BEFORE the useEffect that calls it
   const fetchApplications = async () => {
@@ -158,8 +165,14 @@ const ApplicationsPage = () => {
       Notes:         (a.notes || "").replace(/,/g, ";"),
     }));
 
-    const headers = Object.keys(rows[0]).map((h) => `"${h}"`).join(","); // BUG-09: quote headers
-    const body    = rows.map((r) => Object.values(r).map((v) => `"${v}"`).join(","));
+    const headers = Object.keys(rows[0])
+      .map((h) => `"${String(h).replace(/"/g, '""')}"`)
+      .join(",");
+    const body = rows.map((r) =>
+      Object.values(r)
+        .map((v) => `"${String(v ?? "").replace(/"/g, '""')}"`)
+        .join(",")
+    );
     const csv     = [headers, ...body].join("\n");
     const url     = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
     const a       = document.createElement("a");

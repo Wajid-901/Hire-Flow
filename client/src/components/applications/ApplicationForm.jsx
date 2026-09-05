@@ -2,23 +2,23 @@ import { useState, useEffect } from "react";
 
 // Status values match the backend enum exactly (capital first letter)
 const statusOptions = [
-  { value: "Applied",   label: "Applied" },
+  { value: "Applied", label: "Applied" },
   { value: "Interview", label: "Interview" },
-  { value: "Offer",     label: "Offer" },
-  { value: "Rejected",  label: "Rejected" },
+  { value: "Offer", label: "Offer" },
+  { value: "Rejected", label: "Rejected" },
 ];
 
 const workTypeOptions = [
-  { value: "",         label: "Not specified" },
-  { value: "Remote",   label: "Remote" },
-  { value: "Hybrid",   label: "Hybrid" },
-  { value: "On-site",  label: "On-site" },
+  { value: "", label: "Not specified" },
+  { value: "Remote", label: "Remote" },
+  { value: "Hybrid", label: "Hybrid" },
+  { value: "On-site", label: "On-site" },
 ];
 
 const priorityOptions = [
-  { value: "Low",    label: "Low" },
+  { value: "Low", label: "Low" },
   { value: "Medium", label: "Medium" },
-  { value: "High",   label: "High" },
+  { value: "High", label: "High" },
 ];
 
 const inputClass =
@@ -26,53 +26,105 @@ const inputClass =
 
 const labelClass = "block text-sm font-medium text-zinc-300 mb-1.5";
 
+const toLocalDateInput = (dateVal) => {
+  if (!dateVal) return "";
+  const d = new Date(dateVal);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+const toDatetimeLocal = (dateVal) => {
+  if (!dateVal) return "";
+  const d = new Date(dateVal);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  const year = d.getFullYear();
+  const month = pad(d.getMonth() + 1);
+  const day = pad(d.getDate());
+  const hours = pad(d.getHours());
+  const minutes = pad(d.getMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const ApplicationForm = ({ application, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     companyName: "",
-    jobRole:     "",
-    location:    "",
-    workType:    "",
-    status:      "Applied",
-    priority:    "Medium",
-    notes:       "",
-    jobLink:     "",
-    appliedDate: new Date().toISOString().split("T")[0],
+    jobRole: "",
+    location: "",
+    workType: "",
+    status: "Applied",
+    priority: "Medium",
+    notes: "",
+    jobLink: "",
+    appliedDate: toLocalDateInput(new Date()),
+    interviewDate: "",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState("");
+  const [error, setError] = useState("");
 
-  // Populate form when editing an existing application
   useEffect(() => {
     if (application) {
       setFormData({
         companyName: application.companyName || "",
-        jobRole:     application.jobRole     || "",
-        location:    application.location    || "",
-        workType:    application.workType    || "",
-        status:      application.status      || "Applied",
-        priority:    application.priority    || "Medium",
-        notes:       application.notes       || "",
-        jobLink:     application.jobLink     || "",
-        appliedDate: application.appliedDate
-          ? new Date(application.appliedDate).toISOString().split("T")[0]
-          : new Date().toISOString().split("T")[0],
+        jobRole: application.jobRole || "",
+        location: application.location || "",
+        workType: application.workType || "",
+        status: application.status || "Applied",
+        priority: application.priority || "Medium",
+        notes: application.notes || "",
+        jobLink: application.jobLink || "",
+        appliedDate:
+          toLocalDateInput(application.appliedDate) ||
+          toLocalDateInput(new Date()),
+        interviewDate: application.interviewDate
+          ? toDatetimeLocal(application.interviewDate)
+          : "",
       });
     }
   }, [application]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    setFormData((prev) => {
+      if (name === "status") {
+        return {
+          ...prev,
+          status: value,
+          interviewDate: value === "Interview" ? prev.interviewDate : "",
+        };
+      }
+
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
-      await onSubmit(formData);
+      const payload = { ...formData };
+
+      if (payload.status !== "Interview") {
+        payload.interviewDate = null;
+      } else if (payload.interviewDate) {
+        payload.interviewDate = new Date(payload.interviewDate).toISOString();
+      } else {
+        payload.interviewDate = null;
+      }
+
+      await onSubmit(payload);
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to save application. Please try again.");
+      setError(
+        err.response?.data?.message ||
+          "Failed to save application. Please try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -86,7 +138,6 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         </div>
       )}
 
-      {/* Row 1 – Company & Role */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClass}>
@@ -118,7 +169,6 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         </div>
       </div>
 
-      {/* Row 2 – Location & Work Type */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClass}>Location</label>
@@ -148,7 +198,6 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         </div>
       </div>
 
-      {/* Row 3 – Status & Priority */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClass}>
@@ -185,7 +234,30 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         </div>
       </div>
 
-      {/* Row 4 – Applied Date & Job Link */}
+      {(formData.status === "Interview" || formData.interviewDate) && (
+        <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 space-y-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <label className="text-sm font-semibold text-indigo-300 flex items-center gap-1.5">
+              <span>📅</span> Interview Date & Time
+            </label>
+            <span className="text-[11px] font-medium text-indigo-300/90 bg-indigo-500/20 border border-indigo-500/30 px-2 py-0.5 rounded-full">
+              ⚡ Auto email reminders (24h & 1h prior)
+            </span>
+          </div>
+          <input
+            type="datetime-local"
+            name="interviewDate"
+            value={formData.interviewDate}
+            onChange={handleChange}
+            className={inputClass}
+          />
+          <p className="text-xs text-zinc-400">
+            HireFlow will automatically send reminder emails to your registered
+            Gmail 24 hours and 1 hour before the interview.
+          </p>
+        </div>
+      )}
+
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className={labelClass}>
@@ -213,7 +285,6 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         </div>
       </div>
 
-      {/* Notes */}
       <div>
         <label className={labelClass}>Notes</label>
         <textarea
@@ -226,7 +297,6 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
         />
       </div>
 
-      {/* Actions */}
       <div className="flex gap-3 pt-2">
         <button
           type="button"
@@ -243,8 +313,8 @@ const ApplicationForm = ({ application, onSubmit, onCancel }) => {
           {loading
             ? "Saving…"
             : application
-            ? "Update Application"
-            : "Add Application"}
+              ? "Update Application"
+              : "Add Application"}
         </button>
       </div>
     </form>

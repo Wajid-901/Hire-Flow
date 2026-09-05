@@ -55,9 +55,9 @@ const NotFoundPage = () => {
         <div className="mt-12 pt-8 border-t border-white/5">
           <p className="text-sm text-neutral-500">
             Need help? {" "}
-            <a href="#" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+            <Link to="/contact" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
               Contact support
-            </a>
+            </Link>
             {" "} or {" "}
             <button onClick={() => window.history.back()} className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors inline-flex items-center gap-1">
               <BsArrowLeft />

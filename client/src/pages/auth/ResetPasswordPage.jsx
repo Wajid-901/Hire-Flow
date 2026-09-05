@@ -9,7 +9,7 @@ import axiosInstance from '../../api/axiosInstance';
 const ResetPasswordPage = () => {
   const { token } = useParams();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     password: '',
     confirmPassword: '',
@@ -30,8 +30,8 @@ const ResetPasswordPage = () => {
     setError('');
 
     // Validation
-    if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters long');
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long');
       return;
     }
 
@@ -55,8 +55,8 @@ const ResetPasswordPage = () => {
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || 
-        'Failed to reset password. The link may have expired.'
+        err.response?.data?.message ||
+          'Failed to reset password. The link may have expired.'
       );
     } finally {
       setLoading(false);
@@ -71,12 +71,12 @@ const ResetPasswordPage = () => {
             <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <BsCheckCircle className="w-8 h-8 text-emerald-500" />
             </div>
-            
+
             <h2 className="text-2xl font-bold text-white mb-2">Password Reset Successful!</h2>
             <p className="text-zinc-400 mb-6">
               Your password has been reset successfully. Redirecting to login...
             </p>
-            
+
             <Link to="/login">
               <Button variant="primary" className="w-full">
                 Go to Login
@@ -94,9 +94,7 @@ const ResetPasswordPage = () => {
         <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">Reset Password</h1>
-            <p className="text-zinc-400">
-              Enter your new password below
-            </p>
+            <p className="text-zinc-400">Enter your new password below</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -127,10 +125,16 @@ const ResetPasswordPage = () => {
             <div className="bg-zinc-800/50 rounded-lg p-4">
               <p className="text-xs text-zinc-400 mb-2">Password requirements:</p>
               <ul className="text-xs text-zinc-500 space-y-1">
-                <li className={formData.password.length >= 6 ? 'text-emerald-500' : ''}>
-                  • At least 6 characters
+                <li className={formData.password.length >= 8 ? 'text-emerald-500' : ''}>
+                  • At least 8 characters
                 </li>
-                <li className={formData.password === formData.confirmPassword && formData.password ? 'text-emerald-500' : ''}>
+                <li
+                  className={
+                    formData.password === formData.confirmPassword && formData.password
+                      ? 'text-emerald-500'
+                      : ''
+                  }
+                >
                   • Passwords match
                 </li>
               </ul>

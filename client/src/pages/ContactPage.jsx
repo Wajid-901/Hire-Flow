@@ -212,12 +212,11 @@ const ContactPage = () => {
                   <div>
                     <label className={labelClass}>
                       Email Address
-                      {/* Show lock icon for pre-filled authenticated users */}
-                      {user && (
-                        <span className="ml-1.5 text-[10px] font-normal text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-1.5 py-0.5 rounded-full">
-                          auto-filled
+                      {user ? (
+                        <span className="ml-1.5 text-[10px] font-normal text-zinc-400 bg-zinc-700/50 border border-zinc-600 px-1.5 py-0.5 rounded-full">
+                          🔒 locked
                         </span>
-                      )}
+                      ) : null}
                     </label>
                     <input
                       type="email"
@@ -225,9 +224,11 @@ const ContactPage = () => {
                       required
                       placeholder="you@example.com"
                       value={form.email}
-                      onChange={handleChange}
-                      className={`${inputClass} ${emailError ? "border-red-500 focus:ring-red-500" : ""}`}
-                      // Logged-in users: still editable in case they want to use a different address
+                      onChange={user ? undefined : handleChange}
+                      readOnly={!!user}
+                      className={`${inputClass} ${
+                        emailError ? "border-red-500 focus:ring-red-500" : ""
+                      } ${user ? "opacity-70 cursor-not-allowed select-none" : ""}`}
                     />
                     {emailError && (
                       <p className="mt-1.5 text-xs text-red-400">{emailError}</p>

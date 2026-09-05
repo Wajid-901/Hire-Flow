@@ -1,4 +1,4 @@
-﻿import express   from "express";
+import express   from "express";
 import cors      from "cors";
 import helmet    from "helmet";
 import rateLimit from "express-rate-limit";
@@ -26,20 +26,12 @@ app.use(cors({
     if (!origin) return cb(null, true);
     if (allowedOrigins.includes(origin)) return cb(null, true);
     if (vercelPreviewPattern.test(origin)) return cb(null, true);
-    cb(new Error(`CORS: origin ${origin} not allowed`));
+    cb(null, false);
   },
   credentials: true,
 }));
 
 app.use(express.json({ limit: "10kb" }));
-
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { success: false, message: "Too many requests, try again in 15 minutes." },
-});
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -50,10 +42,9 @@ const apiLimiter = rateLimit({
 });
 
 app.use("/api/health",       healthRoutes);
-app.use("/api/contact",       contactRoutes);
-app.use("/api/auth",         authLimiter, authRoutes);
+app.use("/api/contact",      contactRoutes);
+app.use("/api/auth",         authRoutes);
 app.use("/api/applications", apiLimiter,  applicationRoutes);
 app.use(errorMiddleware);
 
 export default app;
-

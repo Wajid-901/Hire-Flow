@@ -66,6 +66,21 @@ const applicationSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    // ── Interview reminder fields ──────────────────────────────────────────
+    // Optional date+time of the interview — enables 24h and 1h email reminders
+    interviewDate: {
+      type: Date,
+      default: null,
+    },
+    // Track which reminders have already been sent so we never send duplicates
+    reminder24hSent: {
+      type: Boolean,
+      default: false,
+    },
+    reminder1hSent: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

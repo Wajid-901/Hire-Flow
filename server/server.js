@@ -1,11 +1,13 @@
 import "dotenv/config";
 import app from "./app.js";
 import connectDB from "./config/database.js";
+import { startReminderService } from "./services/reminderService.js";
 
 const PORT = process.env.PORT || 5000;
 
 const startServer = async () => {
   await connectDB();
+  startReminderService();
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

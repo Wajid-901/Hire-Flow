@@ -32,15 +32,11 @@ const LoginPage = () => {
       
       // The backend returns { success, message, token }
       if (response.success && response.token) {
-        // Store token and get user info
-        localStorage.setItem("token", response.token);
-        
-        // Get user info
-        const userResponse = await getCurrentUser();
-        
+        const userData = response.user || (await getCurrentUser()).data;
+
         // Call context login with user data
         loginContext({ 
-          user: userResponse.data, 
+          user: userData, 
           token: response.token 
         });
         

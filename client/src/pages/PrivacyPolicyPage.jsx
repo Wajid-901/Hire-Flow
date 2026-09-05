@@ -55,7 +55,7 @@ const PrivacyPolicyPage = () => {
 
         {/* Summary callout */}
         <div className="bg-emerald-500/5 border border-emerald-500/20 rounded-2xl p-6 mb-10">
-          <p className="text-emerald-400 font-semibold mb-2">TL;DR — The short version</p>
+          <p className="text-emerald-400 font-semibold mb-2">The short version</p>
           <p className="text-neutral-300 text-sm leading-relaxed">
             We collect only what we need to run the service. We never sell your data to anyone.
             We don't use third-party advertising. You can delete your account and all data at any time.

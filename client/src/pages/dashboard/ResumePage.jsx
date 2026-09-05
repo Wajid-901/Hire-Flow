@@ -1,4 +1,4 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   BsCloudUploadFill,
   BsFileEarmarkPdfFill,
@@ -155,7 +155,7 @@ const ResumePage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                       {f.url && (
                         <a href={f.url} download={f.name}
                           className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-all" title="Download">

@@ -2,13 +2,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsEyeFill, BsEyeSlashFill, BsCheckCircleFill } from "react-icons/bs";
 import useAuth from "../../hooks/useAuth";
-import { register as registerApi, getCurrentUser, login } from "../../api/authApi";
+import {
+  register as registerApi,
+  getCurrentUser,
+  login,
+} from "../../api/authApi";
 import Logo from "../../components/common/Logo";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { login: loginContext } = useAuth();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,6 +34,12 @@ const RegisterPage = () => {
     setIsLoading(true);
     setError("");
 
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      setIsLoading(false);
+      return;
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       setIsLoading(false);
@@ -37,7 +47,6 @@ const RegisterPage = () => {
     }
 
     try {
-      // Register the user
       const registerResponse = await registerApi({
         name: formData.name,
         email: formData.email,
@@ -45,72 +54,78 @@ const RegisterPage = () => {
       });
 
       if (registerResponse.success) {
-        // After successful registration, log them in
         const loginResponse = await login({
           email: formData.email,
           password: formData.password,
         });
 
         if (loginResponse.success && loginResponse.token) {
-          localStorage.setItem("token", loginResponse.token);
-          
-          // Get user info
-          const userResponse = await getCurrentUser();
-          
-          // Call context login
-          loginContext({ 
-            user: userResponse.data, 
-            token: loginResponse.token 
+          const userData = loginResponse.user || (await getCurrentUser()).data;
+
+          loginContext({
+            user: userData,
+            token: loginResponse.token,
           });
-          
+
           navigate("/dashboard");
         }
       } else {
-        setError(registerResponse.message || "Registration failed. Please try again.");
+        setError(
+          registerResponse.message || "Registration failed. Please try again.",
+        );
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
-  const passwordStrength = formData.password.length >= 8 ? "strong" : formData.password.length >= 6 ? "medium" : "weak";
+  const passwordStrength =
+    formData.password.length >= 8
+      ? "strong"
+      : formData.password.length >= 6
+        ? "medium"
+        : "weak";
 
   return (
     <div className="flex min-h-screen bg-[#09090B]">
       {/* Left Side - Illustration */}
       <div className="hidden lg:flex lg:flex-1 relative overflow-hidden bg-gradient-to-br from-emerald-600/10 via-indigo-600/5 to-transparent border-r border-white/5">
-        {/* Animated Background Blobs */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-600/20 rounded-full blur-[120px] animate-pulse"></div>
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600/20 rounded-full blur-[100px] animate-pulse delay-1000"></div>
-        
-        {/* Content */}
+
         <div className="relative z-10 flex flex-col justify-center px-16 max-w-2xl">
           <div className="mb-12">
             <Logo size={44} />
           </div>
-          
+
           <h1 className="text-5xl font-bold tracking-tight mb-6 leading-tight">
-            Start your journey to<br />
+            Start your journey to
+            <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-indigo-400">
               career success
             </span>
           </h1>
-          
+
           <p className="text-lg text-neutral-400 leading-relaxed mb-12">
-            Join thousands of professionals who are landing their dream jobs with HireFlow's intelligent tracking system.
+            Join thousands of professionals who are landing their dream jobs
+            with HireFlow&apos;s intelligent tracking system.
           </p>
-          
-          {/* Benefits List */}
+
           <div className="space-y-4">
             {[
               "Free forever for students",
               "Unlimited application tracking",
               "AI-powered resume analysis",
-              "Interview preparation tools"
+              "Interview preparation tools",
             ].map((benefit, index) => (
-              <div key={index} className="flex items-center gap-3 text-neutral-300">
+              <div
+                key={index}
+                className="flex items-center gap-3 text-neutral-300"
+              >
                 <BsCheckCircleFill className="text-emerald-500 text-lg shrink-0" />
                 <span>{benefit}</span>
               </div>
@@ -122,12 +137,10 @@ const RegisterPage = () => {
       {/* Right Side - Register Form */}
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-md">
-          {/* Mobile Logo */}
           <div className="lg:hidden mb-8">
             <Logo size={32} />
           </div>
 
-          {/* Form Card */}
           <div className="glass-card rounded-2xl p-8 shadow-premium">
             <div className="mb-8">
               <h2 className="text-3xl font-bold tracking-tight text-white mb-2">
@@ -135,7 +148,10 @@ const RegisterPage = () => {
               </h2>
               <p className="text-neutral-400">
                 Already have an account?{" "}
-                <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                <Link
+                  to="/login"
+                  className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
+                >
                   Sign in
                 </Link>
               </p>
@@ -148,9 +164,11 @@ const RegisterPage = () => {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Name Input */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-white mb-2"
+                >
                   Full name
                 </label>
                 <input
@@ -165,9 +183,11 @@ const RegisterPage = () => {
                 />
               </div>
 
-              {/* Email Input */}
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-white mb-2"
+                >
                   Email address
                 </label>
                 <input
@@ -182,9 +202,11 @@ const RegisterPage = () => {
                 />
               </div>
 
-              {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-white mb-2"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -203,21 +225,50 @@ const RegisterPage = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors"
                   >
-                    {showPassword ? <BsEyeSlashFill size={18} /> : <BsEyeFill size={18} />}
+                    {showPassword ? (
+                      <BsEyeSlashFill size={18} />
+                    ) : (
+                      <BsEyeFill size={18} />
+                    )}
                   </button>
                 </div>
                 {formData.password && (
                   <div className="mt-2 flex gap-1">
-                    <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'weak' ? 'bg-red-500' : passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-emerald-500'}`}></div>
-                    <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'medium' || passwordStrength === 'strong' ? passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-emerald-500' : 'bg-white/10'}`}></div>
-                    <div className={`h-1 flex-1 rounded-full ${passwordStrength === 'strong' ? 'bg-emerald-500' : 'bg-white/10'}`}></div>
+                    <div
+                      className={`h-1 flex-1 rounded-full ${
+                        passwordStrength === "weak"
+                          ? "bg-red-500"
+                          : passwordStrength === "medium"
+                            ? "bg-yellow-500"
+                            : "bg-emerald-500"
+                      }`}
+                    ></div>
+                    <div
+                      className={`h-1 flex-1 rounded-full ${
+                        passwordStrength === "medium" ||
+                        passwordStrength === "strong"
+                          ? passwordStrength === "medium"
+                            ? "bg-yellow-500"
+                            : "bg-emerald-500"
+                          : "bg-white/10"
+                      }`}
+                    ></div>
+                    <div
+                      className={`h-1 flex-1 rounded-full ${
+                        passwordStrength === "strong"
+                          ? "bg-emerald-500"
+                          : "bg-white/10"
+                      }`}
+                    ></div>
                   </div>
                 )}
               </div>
 
-              {/* Confirm Password Input */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-white mb-2"
+                >
                   Confirm password
                 </label>
                 <div className="relative">
@@ -236,12 +287,15 @@ const RegisterPage = () => {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-white transition-colors"
                   >
-                    {showConfirmPassword ? <BsEyeSlashFill size={18} /> : <BsEyeFill size={18} />}
+                    {showConfirmPassword ? (
+                      <BsEyeSlashFill size={18} />
+                    ) : (
+                      <BsEyeFill size={18} />
+                    )}
                   </button>
                 </div>
               </div>
 
-              {/* Terms Checkbox */}
               <label className="flex items-start gap-3 cursor-pointer group">
                 <input
                   type="checkbox"
@@ -250,17 +304,22 @@ const RegisterPage = () => {
                 />
                 <span className="text-sm text-neutral-400 group-hover:text-neutral-300 transition-colors">
                   I agree to the{" "}
-                  <Link to="/terms" className="text-indigo-400 hover:text-indigo-300">
+                  <Link
+                    to="/terms"
+                    className="text-indigo-400 hover:text-indigo-300"
+                  >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link to="/privacy-policy" className="text-indigo-400 hover:text-indigo-300">
+                  <Link
+                    to="/privacy-policy"
+                    className="text-indigo-400 hover:text-indigo-300"
+                  >
                     Privacy Policy
                   </Link>
                 </span>
               </label>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -269,7 +328,6 @@ const RegisterPage = () => {
                 {isLoading ? "Creating account..." : "Create account"}
               </button>
 
-              {/* Divider */}
               <div className="relative my-6">
                 <div className="absolute inset-0 flex items-center">
                   <div className="w-full border-t border-white/10"></div>
@@ -279,7 +337,6 @@ const RegisterPage = () => {
                 </div>
               </div>
 
-              {/* Google Login - Coming Soon */}
               <div className="text-center">
                 <p className="text-sm text-neutral-500">
                   Google Sign-In coming soon
