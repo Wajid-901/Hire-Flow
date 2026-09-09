@@ -34,10 +34,16 @@ export const checkAndSendReminders = async () => {
       interviewDate: { $gt: now, $lte: oneHourWindowEnd },
       reminder1hSent: false,
       status: { $nin: ["Rejected"] },
-    }).populate("user", "name email");
+    }).populate("user", "name email notifications");
 
     for (const app of appsFor1h) {
       if (!app.user?.email) continue;
+      // Respect user's notification preference
+      if (app.user.notifications?.interviewReminder1h === false) {
+        // Still mark sent so we don't re-check on every loop
+        await Application.findByIdAndUpdate(app._id, { reminder1hSent: true, reminder24hSent: true });
+        continue;
+      }
 
       try {
         const formatted = formatInterviewDate(app.interviewDate);
@@ -75,10 +81,15 @@ export const checkAndSendReminders = async () => {
       interviewDate: { $gt: oneHourFromNow, $lte: dayWindowEnd },
       reminder24hSent: false,
       status: { $nin: ["Rejected"] },
-    }).populate("user", "name email");
+    }).populate("user", "name email notifications");
 
     for (const app of appsFor24h) {
       if (!app.user?.email) continue;
+      // Respect user's notification preference
+      if (app.user.notifications?.interviewReminder24h === false) {
+        await Application.findByIdAndUpdate(app._id, { reminder24hSent: true });
+        continue;
+      }
 
       try {
         const formatted = formatInterviewDate(app.interviewDate);

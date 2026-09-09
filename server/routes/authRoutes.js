@@ -10,6 +10,7 @@ import {
   forgotPassword,
   resetPassword,
   changePassword,
+  updateNotifications,
 } from "../controllers/authController.js";
 
 import { authenticateUser } from "../middleware/authMiddleware.js";
@@ -54,6 +55,7 @@ router.post(
 router.get("/me", authenticateUser, getMe);
 router.patch("/me", authenticateUser, updateMe);
 router.delete("/me", authenticateUser, deleteMe);
+router.patch("/me/notifications", authenticateUser, updateNotifications);
 router.post(
   "/change-password",
   authenticateUser,

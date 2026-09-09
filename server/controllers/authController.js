@@ -77,6 +77,7 @@ export const loginUser = async (req, res, next) => {
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
+        notifications: user.notifications,
       },
     });
   } catch (error) {
@@ -105,6 +106,7 @@ export const getMe = async (req, res, next) => {
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
+        notifications: user.notifications,
       },
     });
   } catch (error) {
@@ -147,6 +149,7 @@ export const updateMe = async (req, res, next) => {
         email: user.email,
         role: user.role,
         createdAt: user.createdAt,
+        notifications: user.notifications,
       },
     });
   } catch (error) {
@@ -317,6 +320,41 @@ export const deleteMe = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Account and all associated data deleted successfully.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── Update notification preferences ─────────────────────────────────────────
+export const updateNotifications = async (req, res, next) => {
+  try {
+    const { userId } = req.user;
+    const { emailOnStatusChange, interviewReminder24h, interviewReminder1h } = req.body;
+
+    const updates = {};
+    if (typeof emailOnStatusChange  === "boolean") updates["notifications.emailOnStatusChange"]  = emailOnStatusChange;
+    if (typeof interviewReminder24h === "boolean") updates["notifications.interviewReminder24h"] = interviewReminder24h;
+    if (typeof interviewReminder1h  === "boolean") updates["notifications.interviewReminder1h"]  = interviewReminder1h;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ success: false, message: "No valid preference fields provided." });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found." });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Notification preferences updated.",
+      data: user.notifications,
     });
   } catch (error) {
     next(error);

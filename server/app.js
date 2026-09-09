@@ -7,6 +7,7 @@ import applicationRoutes from "./routes/applicationRoutes.js";
 import authRoutes        from "./routes/authRoutes.js";
 import healthRoutes      from "./routes/healthRoutes.js";
 import contactRoutes     from "./routes/contactRoutes.js";
+import resumeRoutes      from "./routes/resumeRoutes.js";
 import errorMiddleware   from "./middleware/errorMiddleware.js";
 
 const app = express();
@@ -45,6 +46,7 @@ app.use("/api/health",       healthRoutes);
 app.use("/api/contact",      contactRoutes);
 app.use("/api/auth",         authRoutes);
 app.use("/api/applications", apiLimiter,  applicationRoutes);
+app.use("/api/resumes",      apiLimiter,  resumeRoutes);
 app.use(errorMiddleware);
 
 export default app;

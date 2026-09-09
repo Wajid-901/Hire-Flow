@@ -2,6 +2,8 @@ import { BsGearFill, BsBellFill, BsShieldFill, BsGlobe, BsArrowRight } from "rea
 import { Link } from "react-router-dom";
 import PageContainer from "../../components/layout/PageContainer";
 import ChangePasswordForm from "../../components/settings/ChangePasswordForm";
+import NotificationPreferences from "../../components/settings/NotificationPreferences";
+import AppPreferences from "../../components/settings/AppPreferences";
 
 const SettingsPage = () => {
   return (
@@ -15,7 +17,7 @@ const SettingsPage = () => {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-8">
         {/* Security Section */}
         <div>
           <div className="flex items-center gap-2 mb-4">
@@ -25,37 +27,29 @@ const SettingsPage = () => {
           <ChangePasswordForm />
         </div>
 
-        {/* Notifications - Coming Soon */}
+        {/* Notifications Section */}
         <div>
           <div className="flex items-center gap-2 mb-4">
             <BsBellFill className="text-indigo-500" />
             <h2 className="text-xl font-bold text-white">Notifications</h2>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <p className="text-zinc-400 text-center py-8">
-              Notification preferences coming soon
-            </p>
-          </div>
+          <NotificationPreferences />
         </div>
 
-        {/* Preferences - Coming Soon */}
+        {/* Preferences Section */}
         <div>
           <div className="flex items-center gap-2 mb-4">
             <BsGearFill className="text-indigo-500" />
             <h2 className="text-xl font-bold text-white">Preferences</h2>
           </div>
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <p className="text-zinc-400 text-center py-8">
-              App preferences coming soon (theme, language, timezone)
-            </p>
-          </div>
+          <AppPreferences />
         </div>
 
         {/* Privacy */}
         <div>
           <div className="flex items-center gap-2 mb-4">
             <BsGlobe className="text-indigo-500" />
-            <h2 className="text-xl font-bold text-white">Privacy & Legal</h2>
+            <h2 className="text-xl font-bold text-white">Privacy &amp; Legal</h2>
           </div>
           <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
             <p className="text-zinc-400 text-sm mb-5">

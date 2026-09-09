@@ -43,6 +43,12 @@ const userSchema = new mongoose.Schema(
     emailVerificationToken: {
       type: String,
     },
+
+    notifications: {
+      emailOnStatusChange: { type: Boolean, default: true },
+      interviewReminder24h: { type: Boolean, default: true },
+      interviewReminder1h:  { type: Boolean, default: true },
+    },
   },
   {
     timestamps: true,
