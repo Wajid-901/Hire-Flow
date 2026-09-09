@@ -79,6 +79,67 @@ const layout = (content) => `
 </body>
 </html>`;
 
+// ─── Email Verification template ───────────────────────────────────────────
+export const emailVerificationTemplate = ({ name, verificationUrl, expiryMinutes = 24 }) => ({
+  subject: "Verify your HireFlow email address",
+  html: layout(`
+    <!-- Icon -->
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="
+        display:inline-flex;align-items:center;justify-content:center;
+        width:60px;height:60px;border-radius:16px;
+        background:rgba(16,185,129,0.12);
+        border:1px solid rgba(16,185,129,0.25);
+        font-size:28px;
+      ">✉️</div>
+    </div>
+
+    <!-- Heading -->
+    <h1 style="font-size:24px;font-weight:700;color:#ffffff;text-align:center;
+      margin-bottom:12px;letter-spacing:-0.5px;">
+      Verify your email
+    </h1>
+
+    <!-- Subtext -->
+    <p style="font-size:15px;color:#a1a1aa;text-align:center;line-height:1.6;margin-bottom:32px;">
+      Hi ${name || "there"}, welcome to HireFlow! Please verify your email address to activate your account and start tracking your job applications.
+    </p>
+
+    <!-- CTA Button -->
+    <div style="text-align:center;margin-bottom:32px;">
+      <a href="${verificationUrl}"
+        style="
+          display:inline-block;
+          background:linear-gradient(135deg,#10b981,#059669);
+          color:#ffffff;
+          font-size:15px;
+          font-weight:600;
+          padding:14px 36px;
+          border-radius:12px;
+          letter-spacing:0.01em;
+          text-decoration:none;
+        ">
+        Verify Email
+      </a>
+    </div>
+
+    <!-- Expiry notice -->
+    <p style="font-size:13px;color:#71717a;text-align:center;margin-bottom:28px;">
+      This link expires in <strong style="color:#a1a1aa;">${expiryMinutes} hours</strong>.
+      After that you'll need to request a new verification email.
+    </p>
+
+    <!-- Divider -->
+    <div style="border-top:1px solid rgba(255,255,255,0.06);margin-bottom:24px;"></div>
+
+    <!-- Fallback URL -->
+    <p style="font-size:12px;color:#52525b;line-height:1.7;">
+      If the button doesn't work, copy and paste this URL into your browser:<br/>
+      <a href="${verificationUrl}" style="color:#10b981;word-break:break-all;">${verificationUrl}</a>
+    </p>
+  `),
+});
+
 // ─── Password Reset template ─────────────────────────────────────────────────
 export const passwordResetTemplate = ({ name, resetUrl, expiryMinutes = 60 }) => ({
   subject: "Reset your HireFlow password",
@@ -155,7 +216,7 @@ export const welcomeTemplate = ({ name }) => ({
     </h1>
 
     <p style="font-size:15px;color:#a1a1aa;text-align:center;line-height:1.6;margin-bottom:32px;">
-      Your account is ready. Start tracking your job applications, stay organised,
+      Your email has been verified. Start tracking your job applications, stay organised,
       and land your dream role — completely free.
     </p>
 
@@ -301,4 +362,3 @@ export const interviewReminderTemplate = ({
     `),
   };
 };
-
