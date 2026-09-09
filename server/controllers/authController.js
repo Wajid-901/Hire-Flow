@@ -1,5 +1,8 @@
+import bcrypt from "bcrypt";
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
+import Application from "../models/applicationModel.js";
 import { SALT_ROUNDS } from "../constants/authConstants.js";
 import sendEmail from "../services/emailService.js";
 import {
@@ -426,9 +429,11 @@ export const updateNotifications = async (req, res, next) => {
       });
     }
 
-    const user = await User.findByIdAndUpdate(userId, { $set: updates }, { new: true, runValidators: true }).select(
-      "-password",
-    );
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    ).select("-password");
 
     if (!user) {
       return res.status(404).json({
