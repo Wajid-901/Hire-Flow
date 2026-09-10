@@ -286,11 +286,14 @@ export const changePassword = async (req, res, next) => {
 
 // ─── Delete account (authenticated, password-confirmed) ───────────────────────
 export const deleteMe = async (req, res, next) => {
+  const session = await User.startSession();
+
   try {
     const { userId } = req.user;
     const { currentPassword } = req.body;
 
     if (!currentPassword) {
+      session.endSession();
       return res.status(400).json({
         success: false,
         message:
@@ -298,8 +301,14 @@ export const deleteMe = async (req, res, next) => {
       });
     }
 
-    const user = await User.findById(userId);
+    session.startTransaction();
+
+    const user = await User.findById(userId).session(session);
+
     if (!user) {
+      await session.abortTransaction();
+      session.endSession();
+
       return res.status(404).json({
         success: false,
         message: "User not found.",
@@ -307,25 +316,40 @@ export const deleteMe = async (req, res, next) => {
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
+
     if (!isMatch) {
+      await session.abortTransaction();
+      session.endSession();
+
       return res.status(400).json({
         success: false,
         message: "Incorrect password. Please try again.",
       });
     }
 
-    await Application.deleteMany({ user: userId });
-    await User.findByIdAndDelete(userId);
+    await Application.deleteMany(
+      { user: userId },
+      { session }
+    );
+
+    await User.deleteOne(
+      { _id: userId },
+      { session }
+    );
+
+    await session.commitTransaction();
+    session.endSession();
 
     return res.status(200).json({
       success: true,
       message: "Account and all associated data deleted successfully.",
     });
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
     next(error);
   }
 };
-
 // ─── Update notification preferences ─────────────────────────────────────────
 export const updateNotifications = async (req, res, next) => {
   try {

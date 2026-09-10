@@ -17,7 +17,10 @@ const nameSchema = z
   .min(1, "Name is required")
   .max(100, "Name is too long");
 
-const tokenSchema = z.string().trim().min(1, "Reset token is required");
+const tokenSchema = z
+  .string()
+  .trim()
+  .regex(/^[a-f0-9]{64}$/i, "Reset token is invalid");
 
 const handleValidation = (schemas) => {
   return (req, res, next) => {

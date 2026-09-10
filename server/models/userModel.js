@@ -35,19 +35,10 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
 
-    isEmailVerified: {
-      type: Boolean,
-      default: false,
-    },
-
-    emailVerificationToken: {
-      type: String,
-    },
-
     notifications: {
       emailOnStatusChange: { type: Boolean, default: true },
       interviewReminder24h: { type: Boolean, default: true },
-      interviewReminder1h:  { type: Boolean, default: true },
+      interviewReminder1h: { type: Boolean, default: true },
     },
   },
   {

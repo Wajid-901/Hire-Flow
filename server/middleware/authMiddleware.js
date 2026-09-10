@@ -2,6 +2,13 @@ import jwt from "jsonwebtoken";
 
 export const authenticateUser = (req, res, next) => {
   try {
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({
+        success: false,
+        message: "Server authentication is misconfigured.",
+      });
+    }
+
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,11 +19,9 @@ export const authenticateUser = (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decoded;
-
     next();
   } catch (error) {
     return res.status(401).json({
