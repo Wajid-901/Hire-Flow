@@ -6,12 +6,11 @@ import Application from "../models/applicationModel.js";
 import { SALT_ROUNDS } from "../constants/authConstants.js";
 import sendEmail from "../services/emailService.js";
 import {
-  emailVerificationTemplate,
   passwordResetTemplate,
   welcomeTemplate,
 } from "../services/emailTemplates.js";
 
-// ─── Register ──────────────────────────────────────────────────────────────
+// ─── Register ──────────────────────────────────────────────────────────[...]
 export const registerUser = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
@@ -25,94 +24,23 @@ export const registerUser = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+    await User.create({ name, email, password: hashedPassword });
 
-    // Generate email verification token
-    const verificationToken = crypto.randomBytes(32).toString("hex");
-    const hashedVerificationToken = crypto
-      .createHash("sha256")
-      .update(verificationToken)
-      .digest("hex");
-
-    // Create user with unverified email
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      isEmailVerified: false,
-      emailVerificationToken: hashedVerificationToken,
-    });
-
-    // Send verification email
-    const verificationUrl = `${
-      process.env.CLIENT_URL || "http://localhost:5173"
-    }/verify-email/${verificationToken}`;
-
-    sendEmail({
-      to: email,
-      ...emailVerificationTemplate({ name, verificationUrl, expiryMinutes: 24 }),
-    }).catch((err) =>
-      console.error("Verification email failed:", err.message),
+    // Send welcome email (non-blocking — don't fail registration if email fails)
+    sendEmail({ to: email, ...welcomeTemplate({ name }) }).catch((err) =>
+      console.error("Welcome email failed:", err.message),
     );
 
     return res.status(201).json({
       success: true,
-      message:
-        "Account created successfully. Please check your email to verify your account.",
+      message: "Account created successfully.",
     });
   } catch (error) {
     next(error);
   }
 };
 
-// ─── Verify Email ──────────────────────────────────────────────────────────
-export const verifyEmail = async (req, res, next) => {
-  try {
-    const { token } = req.params;
-
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
-
-    const user = await User.findOne({
-      emailVerificationToken: hashedToken,
-    });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid or expired verification link.",
-      });
-    }
-
-    if (user.isEmailVerified) {
-      return res.status(400).json({
-        success: false,
-        message: "Email is already verified.",
-      });
-    }
-
-    // Mark email as verified
-    user.isEmailVerified = true;
-    user.emailVerificationToken = undefined;
-    await user.save();
-
-    // Send welcome email (non-blocking)
-    sendEmail({ to: user.email, ...welcomeTemplate({ name: user.name }) }).catch(
-      (err) => console.error("Welcome email failed:", err.message),
-    );
-
-    return res.status(200).json({
-      success: true,
-      message:
-        "Email verified successfully! You can now log in to your account.",
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── Login ─────────────────────────────────────────────────────────────────
+// ─── Login ───────────────────────────────────────────────────────────[...]
 export const loginUser = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -122,15 +50,6 @@ export const loginUser = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         message: "Invalid email or password.",
-      });
-    }
-
-    // Check if email is verified
-    if (!user.isEmailVerified) {
-      return res.status(403).json({
-        success: false,
-        message:
-          "Please verify your email first. Check your inbox for the verification link.",
       });
     }
 
@@ -166,7 +85,7 @@ export const loginUser = async (req, res, next) => {
   }
 };
 
-// ─── Get current user ──────────────────────────────────────────────────────
+// ─── Get current user ───────────────────────────────────────────────────────[...]
 export const getMe = async (req, res, next) => {
   try {
     const { userId } = req.user;
@@ -195,7 +114,7 @@ export const getMe = async (req, res, next) => {
   }
 };
 
-// ─── Update profile (name) ─────────────────────────────────────────────────
+// ─── Update profile (name) ────────────────────────────────────────────────────
 export const updateMe = async (req, res, next) => {
   try {
     const { userId } = req.user;
@@ -238,7 +157,7 @@ export const updateMe = async (req, res, next) => {
   }
 };
 
-// ─── Forgot password ──────────────────────────────────────────────────────
+// ─── Forgot password ───────────────────────────────────────────────────────[...]
 export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -295,7 +214,7 @@ export const forgotPassword = async (req, res, next) => {
   }
 };
 
-// ─── Reset password (from email link) ──────────────────────────────────────
+// ─── Reset password (from email link) ────────────────────────────────────────
 export const resetPassword = async (req, res, next) => {
   try {
     const { token } = req.params;
@@ -331,7 +250,7 @@ export const resetPassword = async (req, res, next) => {
   }
 };
 
-// ─── Change password (authenticated) ───────────────────────────────────────
+// ─── Change password (authenticated) ─────────────────────────────────────────
 export const changePassword = async (req, res, next) => {
   try {
     const { userId } = req.user;
@@ -365,7 +284,7 @@ export const changePassword = async (req, res, next) => {
   }
 };
 
-// ─── Delete account (authenticated, password-confirmed) ────────────────────
+// ─── Delete account (authenticated, password-confirmed) ───────────────────────
 export const deleteMe = async (req, res, next) => {
   try {
     const { userId } = req.user;
@@ -407,26 +326,19 @@ export const deleteMe = async (req, res, next) => {
   }
 };
 
-// ─── Update notification preferences ───────────────────────────────────────
+// ─── Update notification preferences ─────────────────────────────────────────
 export const updateNotifications = async (req, res, next) => {
   try {
     const { userId } = req.user;
-    const { emailOnStatusChange, interviewReminder24h, interviewReminder1h } =
-      req.body;
+    const { emailOnStatusChange, interviewReminder24h, interviewReminder1h } = req.body;
 
     const updates = {};
-    if (typeof emailOnStatusChange === "boolean")
-      updates["notifications.emailOnStatusChange"] = emailOnStatusChange;
-    if (typeof interviewReminder24h === "boolean")
-      updates["notifications.interviewReminder24h"] = interviewReminder24h;
-    if (typeof interviewReminder1h === "boolean")
-      updates["notifications.interviewReminder1h"] = interviewReminder1h;
+    if (typeof emailOnStatusChange  === "boolean") updates["notifications.emailOnStatusChange"]  = emailOnStatusChange;
+    if (typeof interviewReminder24h === "boolean") updates["notifications.interviewReminder24h"] = interviewReminder24h;
+    if (typeof interviewReminder1h  === "boolean") updates["notifications.interviewReminder1h"]  = interviewReminder1h;
 
     if (Object.keys(updates).length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: "No valid preference fields provided.",
-      });
+      return res.status(400).json({ success: false, message: "No valid preference fields provided." });
     }
 
     const user = await User.findByIdAndUpdate(
@@ -436,10 +348,7 @@ export const updateNotifications = async (req, res, next) => {
     ).select("-password");
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found.",
-      });
+      return res.status(404).json({ success: false, message: "User not found." });
     }
 
     return res.status(200).json({
